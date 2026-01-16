@@ -1,0 +1,255 @@
+{% extends 'base.html' %}
+{% block title %}Shop - Pethood{% endblock %}
+{% load static %}
+{% block content %}
+
+<div class="collections-container">
+
+  <!-- Product Section -->
+  <section class="products">
+    <div class="products-header">
+      <h2>ALL <span>COLLECTIONS</span></h2>
+
+      <!-- Controls Row (Filters + Sort) -->
+      <div class="controls">
+        <!-- Filters Dropdown -->
+        <div class="filters-dropdown">
+          <button class="dropdown-btn">Filters ▾</button>
+          <div class="dropdown-content">
+            <h4>Categories</h4>
+            <ul>
+              <li><a href="?sort={{ sort }}" class="{% if not selected_categories %}active{% endif %}">All</a></li>
+              <li><a href="?category=food&sort={{ sort }}" class="{% if selected_category == 'food' %}active{% endif %}">Food</a></li>
+              <li><a href="?category=clothes&sort={{ sort }}" class="{% if selected_category == 'clothes' %}active{% endif %}">Clothes</a></li>
+              <li><a href="?category=accessories&sort={{ sort }}" class="{% if selected_category == 'accessories' %}active{% endif %}">Accessories</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Sort Dropdown -->
+        <form method="get" class="sort-form">
+          {% for cat in selected_categories %}
+            <input type="hidden" name="category" value="{{ cat }}">
+          {% endfor %}
+          <select name="sort" id="sort">
+            <option value="">Sort by: Relevant</option>
+            <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+            <option value="price_high" {% if sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+          </select>
+        </form>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="product-grid">
+      {% for product in products %}
+        <a href="{% url 'productdetails' product.id %}" class="product-card">
+          <img src="{{ product.image.url }}" alt="{{ product.name }}">
+          <h4>{{ product.name }}</h4>
+          <p class="price">${{ product.price }}</p>
+        </a>
+      {% empty %}
+        <p>No products found.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+</div>
+
+<style>
+/* Page background */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #fffbea;   /* butter yellow */
+  color: #333;
+}
+
+.collections-container {
+  max-width: 1300px;
+  margin: 20px auto;
+  padding: 0 15px;
+}
+
+/* Products Section */
+.products-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.products-header h2 {
+  font-size: 22px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #000;
+}
+
+.products-header h2 span {
+  color: #e63946;  /* red/orange highlight */
+}
+
+/* Controls row (filters + sort) */
+.controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+/* Filters Dropdown */
+.filters-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-btn {
+  background: #fff;
+  border: 2px solid #f5d76e;   /* butter yellow border */
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #5a3e00;
+  transition: 0.2s;
+}
+
+.dropdown-btn:hover {
+  background: #fff7d1;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 110%;
+  left: 0;
+  background: #fff;
+  border: 2px solid #f5d76e;
+  border-radius: 10px;
+  min-width: 180px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.dropdown-content h4 {
+  margin: 5px 0;
+  font-size: 13px;
+  color: #5a3e00;
+}
+
+.dropdown-content ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dropdown-content li {
+  margin: 6px 0;
+}
+
+.dropdown-content a {
+  text-decoration: none;
+  color: #444;
+  padding: 5px 8px;
+  display: block;
+  border-radius: 6px;
+  transition: background 0.2s;
+  font-size: 13px;
+}
+
+.dropdown-content a:hover,
+.dropdown-content a.active {
+  background: #ffe6da;
+  color: #e07b52;
+  font-weight: bold;
+}
+
+/* Show dropdown on hover */
+.filters-dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Sort Dropdown */
+.sort-form select {
+  padding: 6px 10px;
+  border: 2px solid #f5d76e;  /* yellow border */
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Product Grid */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 20px;
+}
+
+.product-card {
+  background: #fff;
+  border-radius: 12px;
+  text-align: center;
+  padding: 15px;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid #eee;
+  transition: 0.3s;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+}
+
+.product-card img {
+  width: 90%;
+  height: 180px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.product-card h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 8px 0;
+}
+
+.price {
+  color: #e07b52;
+  font-weight: bold;
+  font-size: 15px;
+}
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const sortSelect = document.getElementById("sort");
+    if (sortSelect) {
+      sortSelect.addEventListener("change", () => {
+        sortSelect.form.submit();
+      });
+    }
+  });
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

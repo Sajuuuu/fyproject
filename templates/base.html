@@ -1,0 +1,167 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Pethood{% endblock %}</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Navbar styles */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 30px;
+      background: #fff;
+      border-bottom: 1px solid #eee;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo img {
+      height: 100px;
+      margin-right: 10px;
+    }
+
+    .brand {
+      font-size: 18px;
+      font-weight: bold;
+      color: #000;
+    }
+
+    .brand-highlight {
+      color: #b30047;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 25px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #344055;
+      font-weight: 600;
+      font-size: 14px;
+      position: relative;
+    }
+
+    .nav-links a.active::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: #344055;
+    }
+
+    .icons {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 18px;
+      color: #344055;
+    }
+
+    .icons a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .cart {
+      position: relative;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -6px;
+      right: -10px;
+      background-color: #000;
+      color: #fff;
+      font-size: 10px;
+      font-weight: bold;
+      border-radius: 50%;
+      padding: 2px 5px;
+    }
+
+    /* Logout button/icon styling */
+    .logout {
+      background: none;
+      border: none;
+      font-size: 18px;
+      color: #344055;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 0;
+    }
+
+    .logout:hover {
+      color: #b30047;
+    }
+
+    .logout i {
+      margin-right: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">
+      <img src="{% static 'logo.png' %}" alt="Pethood Logo" />
+      <span class="brand">PET <span class="brand-highlight">HOOD</span></span>
+    </div>
+
+    <nav class="nav-links">
+      <a href="{% url 'home' %}">HOME</a>
+      <a href="{% url 'shop_home' %}">COLLECTION</a>
+      <a href="#">ABOUT US</a>
+      <a href="#">OUR DOGS</a>
+      <a href="#">MY ADOPTION</a>
+      <a href="#">SERVICES</a>
+    </nav>
+
+    <div class="icons">
+      <!-- Search Icon -->
+      <a href="#"><i class="fas fa-search"></i></a>
+
+      <!-- User/Login Icon -->
+      <a href="{% url 'signin' %}"><i class="fas fa-user"></i></a>
+
+      <!-- Cart Icon -->
+      <a href="{% url 'cart_view' %}" class="cart">
+        <i class="fas fa-shopping-bag"></i>
+        <span class="cart-count">{{ cart_count }}</span>
+      </a>
+
+      <!-- Logout Icon -->
+      <form action="{% url 'logout' %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="logout">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </form>
+    </div>
+  </header>
+
+  <!-- Page content -->
+  {% block content %}{% endblock %}
+
+</body>
+</html>
+

@@ -1,0 +1,179 @@
+{% load static %}
+
+<style>
+  /* Carousel container */
+  .pet-fashion-slider {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    border-radius: 8px;
+    position: relative;
+    max-width: 1400px;
+    height: 500px;
+    margin: 30px auto;
+    color: #f3dda5;
+    background-color: #a0b9bf;
+    font-family: 'Poppins', sans-serif;
+    user-select: none;
+  }
+
+  /* Text styles */
+  .pet-fashion-text {
+    flex: 1 1 50%;
+    max-width: 50%;
+  }
+  .pet-fashion-text .intro {
+    font-weight: 800;
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+  .pet-fashion-text .title {
+    font-weight: 900;
+    font-size: 48px;
+    margin-bottom: 8px;
+  }
+  .pet-fashion-text .subtitle {
+    font-weight: 800;
+    font-size: 28px;
+  }
+
+  /* Base image container */
+  .pet-fashion-image {
+    flex: 1 1 40%;
+    max-width: 100%;
+    position: relative;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .pet-fashion-image img {
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
+  }
+ 
+  /* Slide 1: Fashion */
+  .slide-fashion img {
+    width: 90%;
+    height: 100%;
+    object-fit: cover; 
+  }
+
+  /* Slide 2: Dog */
+  .slide-dog img {
+    width: 80%;
+    height: auto;
+    object-fit: contain;
+    padding: 15px;
+  }
+
+  /* Dots */
+  .dots {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+  }
+  .dot {
+    width: 10px;
+    height: 10px;
+    background-color: #ddd;
+    border-radius: 50%;
+    cursor: pointer;
+    opacity: 0.6;
+  }
+  .dot.active {
+    background-color: #f3d697;
+    opacity: 1;
+  }
+</style>
+
+<div class="pet-fashion-slider" id="slider">
+  <div class="pet-fashion-text">
+    <div class="intro" id="intro"></div>
+    <div class="title" id="title"></div>
+    <div class="subtitle" id="subtitle"></div>
+  </div>
+  
+  <div class="pet-fashion-image" id="image-container">
+    <img id="pet-image" alt="Pet Fashion" />
+  </div>
+
+  <div class="dots" id="dots"></div>
+</div>
+
+<script>
+  const slides = [
+    {
+      intro: 'INTRODUCING',
+      title: 'PET FASHION',
+      subtitle: 'TRENDING PET FASHION WITH PETHOOD',
+      image: "{% static 'fashion3.png' %}",
+      bgColor: '#a0b9bf',
+      className: 'slide-fashion'
+    },
+    {
+      title: 'LOVE CREATES FAMILY',
+      subtitle: 'Open your heart to a new beginning',
+      image: "{% static 'playfuldog.png' %}",
+      bgColor: '#a0b9bf',
+      className: 'slide-dog'
+    }
+  ];
+
+  let currentIndex = 0;
+  const slider = document.getElementById('slider');
+  const introEl = document.getElementById('intro');
+  const titleEl = document.getElementById('title');
+  const subtitleEl = document.getElementById('subtitle');
+  const petImage = document.getElementById('pet-image');
+  const imageContainer = document.getElementById('image-container');
+  const dotsContainer = document.getElementById('dots');
+
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.classList.add('dot');
+    dot.dataset.index = i;
+    if (i === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => {
+      currentIndex = i;
+      updateSlide();
+      resetAutoSlide();
+    });
+    dotsContainer.appendChild(dot);
+  });
+  const dots = document.querySelectorAll('.dot');
+
+  function updateSlide() {
+    const slide = slides[currentIndex];
+    introEl.textContent = slide.intro || '';
+    titleEl.textContent = slide.title;
+    subtitleEl.textContent = slide.subtitle;
+    petImage.src = slide.image;
+    slider.style.backgroundColor = slide.bgColor;
+    imageContainer.className = 'pet-fashion-image ' + slide.className;
+    dots.forEach(dot => dot.classList.remove('active'));
+    dots[currentIndex].classList.add('active');
+  }
+
+  // Auto-slide function
+  function autoSlide() {
+    currentIndex = (currentIndex + 1) % slides.length;
+    updateSlide();
+  }
+
+  // Start auto-slide every 4 seconds
+  let slideInterval = setInterval(autoSlide, 3000);
+
+  // Reset auto-slide when manually changing slides
+  function resetAutoSlide() {
+    clearInterval(slideInterval);
+    slideInterval = setInterval(autoSlide, 3000);
+  }
+
+  updateSlide();
+</script>
+

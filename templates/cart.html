@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% block title %}Your Cart - Pethood{% endblock %}
+{% load static %}
+{% block content %}
+
+<!-- Floating Cart -->
+<div id="floating-cart" style="
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #ffd6e0;
+      padding: 10px 15px;
+      border-radius: 50px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      z-index: 1000;
+      cursor: pointer;
+">
+    🛒 Cart: 
+    <span id="cart-count">
+        {% if request.user.is_authenticated %}
+            {% if request.user.cart %}
+                {{ request.user.cart.items.count }}
+            {% else %}
+                0
+            {% endif %}
+        {% else %}
+            0
+        {% endif %}
+    </span>
+</div>
+
+<style>
+/* General page style */
+body {
+    background-color: #fff9f0;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+h2 {
+    text-align: center;
+    color: #ff6f91;
+    margin-bottom: 20px;
+}
+
+/* Table styling */
+.cart-table {
+    width: 90%;
+    margin: 0 auto 30px auto;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.cart-table th, .cart-table td {
+    padding: 15px 20px;
+    text-align: center;
+}
+
+.cart-table th {
+    background-color: #ffe6f0;
+    color: #333;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.cart-table tr:nth-child(even) td {
+    background-color: #fff0f5;
+}
+
+.cart-table tr:nth-child(odd) td {
+    background-color: #fff5f8;
+}
+
+.cart-table td button, .cart-table td a {
+    background-color: #ffd6e0;
+    border: none;
+    border-radius: 8px;
+    padding: 5px 10px;
+    color: #333;
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+.cart-table td button:hover, .cart-table td a:hover {
+    background-color: #ffb3c6;
+    color: #fff;
+}
+
+/* Total section */
+.total-section {
+    width: 90%;
+    margin: 0 auto;
+    text-align: right;
+    font-size: 20px;
+    color: #ff6f91;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Checkout button */
+.checkout-btn {
+    display: block;
+    width: 200px;
+    margin: 20px auto;
+    padding: 10px 20px;
+    text-align: center;
+    background-color: #ff6f91;
+    color: #fff;
+    border-radius: 25px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.checkout-btn:hover {
+    background-color: #ff3f6f;
+}
+
+/* Input field styling */
+input[type="number"] {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #ffcce0;
+    border-radius: 6px;
+    text-align: center;
+}
+</style>
+
+<h2>Your Cart</h2>
+
+<table class="cart-table">
+<tr>
+    <th>Product</th>
+    <th>Size</th>
+    <th>Quantity</th>
+    <th>Price</th>
+    <th>Subtotal</th>
+    <th>Actions</th>
+</tr>
+{% for item in items %}
+<tr>
+    <td>{{ item.product.name }}</td>
+    <td>{{ item.size }}</td>
+    <td>
+        <form method="post" action="{% url 'update_cart_item' item.id %}" class="update-form">
+            {% csrf_token %}
+            <input type="number" name="quantity" value="{{ item.quantity }}" min="0">
+            <button type="submit">Update</button>
+        </form>
+    </td>
+    <td>${{ item.product.price }}</td>
+    <td>${{ item.subtotal }}</td>
+    <td>
+        <a href="{% url 'remove_cart_item' item.id %}" class="remove-btn">Remove</a>
+    </td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="6">Your cart is empty.</td>
+</tr>
+{% endfor %}
+</table>
+
+<div class="total-section">
+    Total: ${{ total }}
+</div>
+
+<a href="{#}" class="checkout-btn">Proceed to Checkout</a>
+
+<script>
+// Floating cart click to go to cart page
+const floatingCart = document.getElementById('floating-cart');
+if(floatingCart){
+    floatingCart.addEventListener('click', () => {
+        window.location.href = "{% url 'cart_view' %}";
+    });
+}
+
+// Highlight row when quantity changes
+document.querySelectorAll('.update-form input[type="number"]').forEach(input => {
+    input.addEventListener('change', function() {
+        let row = this.closest('tr');
+        row.style.backgroundColor = '#ffe6f0';
+        setTimeout(() => { row.style.backgroundColor = ''; }, 400);
+    });
+});
+</script>
+
+{% endblock %}
+
+
+
