@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}Payment Failed - Pethood{% endblock %}
+{% block content %}
+
+<style>
+body {
+    background-color: #fff9f0;
+    font-family: 'Arial', sans-serif;
+}
+
+.payment-failed-container {
+    max-width: 600px;
+    margin: 80px auto;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.failed-icon {
+    font-size: 80px;
+    color: #ff6f91;
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 8px 20px;
+    background-color: #fff0f5;
+    color: #ff6f91;
+    border-radius: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.message {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background-color: #ff6f91;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #ff3f6f;
+}
+
+.btn-secondary {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.btn-secondary:hover {
+    background-color: #e0e0e0;
+}
+</style>
+
+<div class="payment-failed-container">
+    <div class="failed-icon">❌</div>
+    <h2>Payment Failed</h2>
+    
+    {% if status %}
+    <div class="status-badge">{{ status }}</div>
+    {% endif %}
+    
+    <p class="message">
+        {{ message|default:"Your payment could not be completed. Please try again or contact support if the problem persists." }}
+    </p>
+    
+    <div class="action-buttons">
+        <a href="{% url 'checkout' %}" class="btn btn-primary">Try Again</a>
+        <a href="{% url 'shop_home' %}" class="btn btn-secondary">Continue Shopping</a>
+    </div>
+</div>
+
+{% endblock %}

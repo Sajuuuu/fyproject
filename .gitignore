@@ -9,6 +9,14 @@ __pycache__/
 # Environment variables
 .env
 
+# SSH Keys (sensitive - never commit!)
+sajuGithub
+sajuGithub.pub
+*.pem
+*.key
+id_rsa
+id_rsa.pub
+
 # OS files
 .DS_Store
 Thumbs.db

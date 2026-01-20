@@ -224,14 +224,12 @@ def checkout_view(request):
     grand_total = total + shipping
     
     if request.method == 'POST':
-        # Handle COD orders
         payment_method = request.POST.get('payment_method')
         
-        # Get address data (either from saved address or manual input)
+        # Get address data first (needed for both payment methods)
         saved_address_id = request.POST.get('saved_address_id')
         
         if saved_address_id:
-            # Use saved address
             saved_address = get_object_or_404(Address, id=saved_address_id, user=request.user)
             first_name = request.user.first_name or request.user.username
             last_name = request.user.last_name or ''
@@ -241,40 +239,116 @@ def checkout_view(request):
             city = saved_address.city
             postal_code = saved_address.postal_code
         else:
-            # Use manual input
             first_name = request.POST.get('first_name')
             last_name = request.POST.get('last_name')
             email = request.POST.get('email')
             phone = request.POST.get('phone')
             address = request.POST.get('address')
             city = request.POST.get('city')
-            postal_code = request.POST.get('postal_code', '')
-            
-            # Save new address to user's profile if they don't have 3 addresses yet
-            save_address = request.POST.get('save_address')  # Optional checkbox
-            if save_address or Address.objects.filter(user=request.user).count() == 0:
-                # Only save if user has less than 3 addresses
-                if Address.objects.filter(user=request.user).count() < 3:
-                    # Check if this exact address already exists
-                    existing = Address.objects.filter(
-                        user=request.user,
-                        address_line=address,
-                        city=city,
-                        phone=phone
-                    ).first()
-                    
-                    if not existing:
-                        Address.objects.create(
-                            user=request.user,
-                            label='Delivery Address',
-                            address_line=address,
-                            city=city,
-                            postal_code=postal_code,
-                            phone=phone,
-                            is_default=Address.objects.filter(user=request.user).count() == 0
-                        )
+            postal_code = request.POST.get('postal_code')
         
-        if payment_method == 'cod':
+        # Store billing details in session for Khalti callback
+        billing_data = {
+            'first_name': first_name,
+            'last_name': last_name,
+            'email': email,
+            'phone': phone,
+            'address': address,
+            'city': city,
+            'postal_code': postal_code,
+            'saved_address_id': saved_address_id,
+        }
+        request.session['khalti_billing'] = billing_data
+        
+        if payment_method == 'khalti':
+            # Initiate Khalti payment on server-side
+            purchase_order_id = f"ORDER-{request.user.id}-{cart.id}"
+            request.session['purchase_order_id'] = purchase_order_id
+            
+            amount_in_paisa = int(grand_total * 100)
+            
+            headers = {
+                "Authorization": f"Key {settings.KHALTI_SECRET_KEY}",
+                "Content-Type": "application/json"
+            }
+            
+            payload = {
+                "return_url": request.build_absolute_uri('/khalti-callback/'),
+                "website_url": request.build_absolute_uri('/'),
+                "amount": amount_in_paisa,
+                "purchase_order_id": purchase_order_id,
+                "purchase_order_name": "Pethood Order",
+                "customer_info": {
+                    "name": f"{first_name} {last_name}",
+                    "email": email,
+                    "phone": phone
+                }
+            }
+            
+            try:
+                response = requests.post(
+                    settings.KHALTI_INITIATE_URL,
+                    json=payload,
+                    headers=headers
+                )
+                
+                if response.status_code == 200:
+                    response_data = response.json()
+                    payment_url = response_data.get('payment_url')
+                    
+                    if payment_url:
+                        # Redirect user to Khalti payment page
+                        return redirect(payment_url)
+                    else:
+                        # Payment URL not found in response
+                        context = {
+                            'items': items,
+                            'total': total,
+                            'shipping': shipping,
+                            'grand_total': grand_total,
+                            'cart': cart,
+                            'cart_count': items.count(),
+                            'khalti_public_key': settings.KHALTI_PUBLIC_KEY,
+                            'addresses': addresses,
+                            'default_address': default_address,
+                            'is_buy_now': buy_now_item_id is not None,
+                            'error': 'Failed to initialize payment. Please try again.'
+                        }
+                        return render(request, 'checkout.html', context)
+                else:
+                    # Payment initiation failed
+                    context = {
+                        'items': items,
+                        'total': total,
+                        'shipping': shipping,
+                        'grand_total': grand_total,
+                        'cart': cart,
+                        'cart_count': items.count(),
+                        'khalti_public_key': settings.KHALTI_PUBLIC_KEY,
+                        'addresses': addresses,
+                        'default_address': default_address,
+                        'is_buy_now': buy_now_item_id is not None,
+                        'error': f'Payment initiation failed: {response.text}'
+                    }
+                    return render(request, 'checkout.html', context)
+            except Exception as e:
+                context = {
+                    'items': items,
+                    'total': total,
+                    'shipping': shipping,
+                    'grand_total': grand_total,
+                    'cart': cart,
+                    'cart_count': items.count(),
+                    'khalti_public_key': settings.KHALTI_PUBLIC_KEY,
+                    'addresses': addresses,
+                    'default_address': default_address,
+                    'is_buy_now': buy_now_item_id is not None,
+                    'error': f'Payment error: {str(e)}'
+                }
+                return render(request, 'checkout.html', context)
+        
+        # Handle COD orders
+        elif payment_method == 'cod':
             # Create order
             order = Order.objects.create(
                 user=request.user,
@@ -444,6 +518,122 @@ def khalti_verify(request):
             
     except Exception as e:
         return JsonResponse({'success': False, 'message': str(e)})
+
+
+# Khalti callback handler (new KPG-2 API)
+@login_required
+def khalti_callback(request):
+    # Get callback parameters
+    pidx = request.GET.get('pidx')
+    status = request.GET.get('status')
+    transaction_id = request.GET.get('transaction_id')
+    purchase_order_id = request.GET.get('purchase_order_id')
+    amount = request.GET.get('amount')
+    
+    # Verify payment using lookup API
+    headers = {
+        "Authorization": f"Key {settings.KHALTI_SECRET_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    payload = {"pidx": pidx}
+    
+    try:
+        response = requests.post(
+            settings.KHALTI_VERIFY_URL.replace('payment/verify', 'epayment/lookup'),
+            json=payload,
+            headers=headers
+        )
+        
+        if response.status_code == 200:
+            verification_data = response.json()
+            
+            # Only create order if status is "Completed"
+            if verification_data.get('status') == 'Completed':
+                # Get billing info from session
+                billing = request.session.get('khalti_billing', {})
+                
+                # Get cart items
+                cart = Cart.objects.get(user=request.user)
+                buy_now_item_id = request.session.get('buy_now_item_id')
+                
+                if buy_now_item_id:
+                    items = cart.items.filter(id=buy_now_item_id)
+                else:
+                    items = cart.items.all()
+                
+                # Calculate total
+                total = sum(item.product.price * item.quantity for item in items)
+                grand_total = total + 5  # shipping
+                
+                # Create order
+                order = Order.objects.create(
+                    user=request.user,
+                    first_name=billing.get('first_name', request.user.first_name),
+                    last_name=billing.get('last_name', request.user.last_name),
+                    email=billing.get('email', request.user.email),
+                    phone=billing.get('phone'),
+                    address=billing.get('address'),
+                    city=billing.get('city'),
+                    postal_code=billing.get('postal_code', ''),
+                    notes=billing.get('notes', ''),
+                    total_amount=grand_total,
+                    payment_method='khalti',
+                    payment_verified=True,
+                    khalti_transaction_id=transaction_id,
+                    status='processing'
+                )
+                
+                # Create order items
+                for item in items:
+                    OrderItem.objects.create(
+                        order=order,
+                        product=item.product,
+                        quantity=item.quantity,
+                        size=item.size,
+                        price=item.product.price
+                    )
+                
+                # Save address if needed
+                saved_address_id = billing.get('saved_address_id')
+                if not saved_address_id and Address.objects.filter(user=request.user).count() < 3:
+                    Address.objects.create(
+                        user=request.user,
+                        label='Delivery Address',
+                        address_line=billing.get('address'),
+                        city=billing.get('city'),
+                        postal_code=billing.get('postal_code', ''),
+                        phone=billing.get('phone'),
+                        is_default=Address.objects.filter(user=request.user).count() == 0
+                    )
+                
+                # Clear cart items
+                items.delete()
+                
+                # Clear session data
+                if 'buy_now_item_id' in request.session:
+                    del request.session['buy_now_item_id']
+                if 'khalti_billing' in request.session:
+                    del request.session['khalti_billing']
+                if 'purchase_order_id' in request.session:
+                    del request.session['purchase_order_id']
+                
+                return redirect('order_success')
+            else:
+                # Payment not completed
+                return render(request, 'payment_failed.html', {
+                    'status': verification_data.get('status'),
+                    'message': f"Payment {verification_data.get('status')}. Please try again."
+                })
+        else:
+            return render(request, 'payment_failed.html', {
+                'message': 'Payment verification failed. Please contact support.'
+            })
+            
+    except Exception as e:
+        return render(request, 'payment_failed.html', {
+            'message': f'Error: {str(e)}'
+        })
 
 
 # Order success page

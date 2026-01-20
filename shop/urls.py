@@ -11,6 +11,7 @@ urlpatterns = [
     path('buy-now-ajax/<int:product_id>/', views.buy_now_ajax, name='buy_now_ajax'),
     path('update-item/<int:item_id>/', views.update_cart_item, name='update_cart_item'),
     path('remove-item/<int:item_id>/', views.remove_cart_item, name='remove_cart_item'),
+    path('khalti-callback/', views.khalti_callback, name='khalti_callback'),
     path('khalti-verify/', views.khalti_verify, name='khalti_verify'),
     path('order-success/', views.order_success, name='order_success'),
     path('<slug:slug>/', views.productdetails, name='productdetails'),
