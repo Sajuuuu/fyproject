@@ -5,98 +5,283 @@
 
 <style>
 body {
-    background-color: #fff9f0;
-    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #fff9f0 0%, #ffe6f0 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #333;
+    min-height: 100vh;
+}
+
+.success-wrapper {
+    padding: 60px 20px;
 }
 
 .success-container {
-    max-width: 600px;
-    margin: 80px auto;
+    max-width: 700px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(255, 111, 145, 0.15);
+    overflow: hidden;
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.success-header {
+    background: linear-gradient(135deg, #ff6f91 0%, #ff3f6f 100%);
+    padding: 40px 30px;
     text-align: center;
-    padding: 50px 30px;
-    background-color: #fff;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    color: white;
 }
 
 .success-icon {
-    width: 80px;
-    height: 80px;
-    background-color: #4caf50;
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 30px;
+    margin: 0 auto 20px;
+    animation: scaleIn 0.5s ease-out 0.2s both;
 }
 
-.success-icon svg {
-    width: 50px;
-    height: 50px;
-    fill: white;
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
 }
 
-.success-container h1 {
-    font-size: 32px;
-    color: #ff6f91;
-    margin-bottom: 15px;
+.checkmark {
+    width: 60px;
+    height: 60px;
+    border: 4px solid white;
+    border-radius: 50%;
+    position: relative;
 }
 
-.success-container p {
-    font-size: 16px;
+.checkmark::after {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 8px;
+    width: 16px;
+    height: 28px;
+    border: solid white;
+    border-width: 0 4px 4px 0;
+    transform: rotate(45deg);
+}
+
+.success-header h1 {
+    font-size: 36px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    letter-spacing: -0.5px;
+}
+
+.success-header p {
+    font-size: 18px;
+    margin: 0;
+    opacity: 0.95;
+}
+
+.success-body {
+    padding: 40px 30px;
+}
+
+.order-info {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.order-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.order-number span {
+    font-size: 14px;
     color: #666;
-    margin-bottom: 30px;
-    line-height: 1.6;
 }
 
-.order-details {
-    background-color: #fff5f8;
-    padding: 20px;
-    border-radius: 10px;
-    margin: 30px 0;
-    text-align: left;
-}
-
-.order-details h3 {
+.order-number strong {
+    font-size: 20px;
     color: #ff6f91;
-    margin-bottom: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
 }
 
-.detail-row {
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.info-item {
+    text-align: center;
+}
+
+.info-label {
+    font-size: 12px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.info-value {
+    font-size: 18px;
+    color: #333;
+    font-weight: 600;
+}
+
+.order-items {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.order-items h3 {
+    color: #333;
+    margin: 0 0 20px 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.item-row {
     display: flex;
     justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #ffe6f0;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #e0e0e0;
 }
 
-.detail-row:last-child {
+.item-row:last-child {
     border-bottom: none;
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-name {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.item-meta {
+    font-size: 14px;
+    color: #666;
+}
+
+.item-price {
+    font-weight: 700;
+    color: #ff6f91;
+    font-size: 18px;
+}
+
+.order-total {
+    background: linear-gradient(135deg, #ff6f91 0%, #ff3f6f 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 20px 25px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-total span {
+    font-size: 16px;
+    opacity: 0.95;
+}
+
+.order-total strong {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.delivery-info {
+    background: #fff9f0;
+    border-left: 4px solid #ff6f91;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.delivery-info h4 {
+    color: #ff6f91;
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.delivery-info p {
+    margin: 5px 0;
+    color: #666;
+    line-height: 1.6;
 }
 
 .btn-group {
     display: flex;
     gap: 15px;
     justify-content: center;
-    margin-top: 30px;
 }
 
 .btn {
-    padding: 12px 30px;
-    border-radius: 25px;
+    padding: 14px 32px;
+    border-radius: 30px;
     text-decoration: none;
-    font-weight: bold;
-    transition: all 0.3s;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    display: inline-block;
 }
 
 .btn-primary {
-    background-color: #ff6f91;
+    background: linear-gradient(135deg, #ff6f91 0%, #ff3f6f 100%);
     color: #fff;
+    box-shadow: 0 4px 15px rgba(255, 111, 145, 0.3);
 }
 
 .btn-primary:hover {
-    background-color: #ff3f6f;
     transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 111, 145, 0.4);
+    color: #fff;
+}
+
+.btn-secondary {
+    background: #fff;
+    color: #ff6f91;
+    border-color: #ff6f91;
+}
+
+.btn-secondary:hover {
+    background: #fff5f8;
+    transform: translateY(-2px);
+    color: #ff6f91;
 }
 
 .btn-secondary {
@@ -130,43 +315,76 @@ body {
 }
 </style>
 
-<div class="success-container">
-    <div class="success-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-        </svg>
-    </div>
-
-    <h1>Order Placed Successfully!</h1>
-    <p>Thank you for your order. We've received your order and will process it shortly.</p>
-
-    {% if order %}
-    <div class="order-details">
-        <h3>Order Details</h3>
-        <div class="detail-row">
-            <span>Order Number:</span>
-            <strong>{{ order.order_number }}</strong>
+<div class="success-wrapper">
+    <div class="success-container">
+        <div class="success-header">
+            <div class="success-icon">
+                <div class="checkmark"></div>
+            </div>
+            <h1>Order Placed Successfully!</h1>
+            <p>Thank you for shopping with Pethood</p>
         </div>
-        <div class="detail-row">
-            <span>Total Amount:</span>
-            <strong>रु{{ order.total_amount }}</strong>
+        
+        <div class="success-body">
+            {% if order %}
+            <div class="order-info">
+                <div class="order-number">
+                    <span>Order Number:</span>
+                    <strong>{{ order.order_number }}</strong>
+                </div>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Payment Method</div>
+                        <div class="info-value">{{ order.get_payment_method_display }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Order Status</div>
+                        <div class="info-value" style="color: #4caf50;">{{ order.get_status_display }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Order Date</div>
+                        <div class="info-value">{{ order.created_at|date:"M d, Y" }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="order-items">
+                <h3>Ordered Items</h3>
+                {% for item in order.items.all %}
+                <div class="item-row">
+                    <div class="item-info">
+                        <div class="item-name">{{ item.product.name }}</div>
+                        <div class="item-meta">
+                            Qty: {{ item.quantity }}
+                            {% if item.size %} | Size: {{ item.size }}{% endif %}
+                        </div>
+                    </div>
+                    <div class="item-price">रु{{ item.subtotal }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="order-total">
+                <span>Total Amount</span>
+                <strong>रु{{ order.total_amount }}</strong>
+            </div>
+            
+            <div class="delivery-info">
+                <h4>Delivery Address</h4>
+                <p><strong>{{ order.first_name }} {{ order.last_name }}</strong></p>
+                <p>{{ order.address }}</p>
+                <p>{{ order.city }}{% if order.postal_code %}, {{ order.postal_code }}{% endif %}</p>
+                <p>Phone: {{ order.phone }}</p>
+                <p>Email: {{ order.email }}</p>
+            </div>
+            {% endif %}
+            
+            <div class="btn-group">
+                <a href="{% url 'profile' %}" class="btn btn-primary">View Orders</a>
+                <a href="{% url 'shop_home' %}" class="btn btn-secondary">Continue Shopping</a>
+            </div>
         </div>
-        <div class="detail-row">
-            <span>Payment Method:</span>
-            <strong>{{ order.payment_method|upper }}</strong>
-        </div>
-        <div class="detail-row">
-            <span>Status:</span>
-            <strong>{{ order.status }}</strong>
-        </div>
-    </div>
-    {% endif %}
-
-    <p>A confirmation email has been sent to your email address.</p>
-
-    <div class="btn-group">
-        <a href="{% url 'home' %}" class="btn btn-primary">Continue Shopping</a>
-        <a href="{% url 'shop_home' %}" class="btn btn-secondary">View Products</a>
     </div>
 </div>
 

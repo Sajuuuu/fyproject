@@ -69,12 +69,18 @@ def logout_view(request):
 # Profile and Address Management
 @login_required
 def profile(request):
+    from shop.models import Order
+    
     addresses = Address.objects.filter(user=request.user)
     can_add_more = addresses.count() < 3
     
+    # Get user's order history
+    orders = Order.objects.filter(user=request.user).prefetch_related('items__product')
+    
     context = {
         'addresses': addresses,
-        'can_add_more': can_add_more
+        'can_add_more': can_add_more,
+        'orders': orders,
     }
     return render(request, 'profile.html', context)
 

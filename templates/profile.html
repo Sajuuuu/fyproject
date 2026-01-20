@@ -216,6 +216,206 @@ h2 span {
     font-size: 16px;
 }
 
+/* Order History */
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.order-card {
+    background: #fff5f8;
+    border-radius: 12px;
+    padding: 25px;
+    border-left: 4px solid #ff6f91;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.order-card:hover {
+    box-shadow: 0 4px 12px rgba(255, 111, 145, 0.2);
+    transform: translateY(-2px);
+}
+
+.order-card.expanded {
+    border-left-width: 6px;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.order-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-top: 1px solid #ffe6f0;
+}
+
+.expand-icon {
+    font-size: 20px;
+    transition: transform 0.3s;
+    color: #ff6f91;
+}
+
+.order-card.expanded .expand-icon {
+    transform: rotate(180deg);
+}
+
+.order-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.order-card.expanded .order-details {
+    max-height: 1000px;
+}
+
+.order-number {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+}
+
+.order-number span {
+    color: #ff6f91;
+    font-family: monospace;
+}
+
+.order-meta {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.order-date {
+    color: #666;
+    font-size: 14px;
+}
+
+.status-badge {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-processing {
+    background: #cce5ff;
+    color: #004085;
+}
+
+.status-shipped {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.status-delivered {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-cancelled {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.order-items {
+    margin: 20px 0 15px 0;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ffe6f0;
+}
+
+.order-item:last-child {
+    border-bottom: none;
+}
+
+.item-details {
+    flex: 1;
+}
+
+.item-name {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.item-meta {
+    font-size: 13px;
+    color: #666;
+}
+
+.item-price {
+    font-weight: 700;
+    color: #ff6f91;
+    font-size: 16px;
+}
+
+.order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 2px solid #ff6f91;
+}
+
+.order-total {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+}
+
+.order-total span {
+    color: #ff6f91;
+}
+
+.order-payment {
+    font-size: 14px;
+    color: #666;
+}
+
+.no-orders {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+}
+
+.no-orders-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.no-orders p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.no-orders .btn {
+    padding: 12px 30px;
+}
+
 /* Modal */
 .modal {
     display: none;
@@ -433,6 +633,73 @@ h2 span {
         </div>
         {% endif %}
     </div>
+
+    <!-- Order History Section -->
+    <div class="section">
+        <h3>Order History</h3>
+        {% if orders %}
+        <div class="orders-list">
+            {% for order in orders %}
+            <div class="order-card" onclick="toggleOrderDetails(this)">
+                <div class="order-header">
+                    <div class="order-number">
+                        Order: <span>{{ order.order_number }}</span>
+                    </div>
+                    <div class="order-meta">
+                        <div class="order-date">{{ order.created_at|date:"M d, Y" }}</div>
+                        <span class="status-badge status-{{ order.status }}">
+                            {{ order.get_status_display }}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="order-summary">
+                    <div>
+                        <strong>{{ order.items.count }}</strong> item{{ order.items.count|pluralize }} • 
+                        <strong>{{ order.get_payment_method_display }}</strong>
+                        {% if order.payment_method == 'khalti' %}
+                            {% if order.payment_verified %}
+                                <span style="color: #4caf50; font-weight: 600;"> • Paid</span>
+                            {% else %}
+                                <span style="color: #ff9800; font-weight: 600;"> • Payment Pending</span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="order-total">
+                            <span>रु{{ order.total_amount }}</span>
+                        </div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                </div>
+                
+                <div class="order-details">
+                    <div class="order-items">
+                        {% for item in order.items.all %}
+                        <div class="order-item">
+                            <div class="item-details">
+                                <div class="item-name">{{ item.product.name }}</div>
+                                <div class="item-meta">
+                                    Qty: {{ item.quantity }}
+                                    {% if item.size %} | Size: {{ item.size }}{% endif %}
+                                </div>
+                            </div>
+                            <div class="item-price">रु{{ item.subtotal }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-orders">
+            <div class="no-orders-icon">∅</div>
+            <p>You haven't placed any orders yet</p>
+            <a href="{% url 'shop_home' %}" class="btn btn-add">Start Shopping</a>
+        </div>
+        {% endif %}
+    </div>
 </div>
 
 <!-- Add Address Modal -->
@@ -526,6 +793,10 @@ h2 span {
 </div>
 
 <script>
+function toggleOrderDetails(card) {
+    card.classList.toggle('expanded');
+}
+
 function openAddModal() {
     document.getElementById('addModal').classList.add('active');
 }

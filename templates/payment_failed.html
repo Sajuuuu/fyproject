@@ -4,100 +4,201 @@
 
 <style>
 body {
-    background-color: #fff9f0;
-    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #fff9f0 0%, #ffe6f0 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+}
+
+.failed-wrapper {
+    padding: 60px 20px;
 }
 
 .payment-failed-container {
     max-width: 600px;
-    margin: 80px auto;
-    padding: 40px;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(255, 111, 145, 0.15);
+    overflow: hidden;
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.failed-header {
+    background: linear-gradient(135deg, #ff6f91 0%, #ff3f6f 100%);
+    padding: 40px 30px;
     text-align: center;
+    color: white;
 }
 
 .failed-icon {
-    font-size: 80px;
-    color: #ff6f91;
-    margin-bottom: 20px;
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 60px;
+    animation: shake 0.5s ease-out;
 }
 
-h2 {
-    color: #333;
-    margin-bottom: 15px;
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.failed-header h2 {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    color: white;
+}
+
+.failed-header p {
+    font-size: 16px;
+    margin: 0;
+    opacity: 0.95;
+}
+
+.failed-body {
+    padding: 40px 30px;
+    text-align: center;
 }
 
 .status-badge {
     display: inline-block;
-    padding: 8px 20px;
-    background-color: #fff0f5;
+    padding: 10px 24px;
+    background: #fff0f5;
     color: #ff6f91;
-    border-radius: 20px;
+    border-radius: 25px;
     font-weight: 600;
-    margin-bottom: 20px;
+    font-size: 14px;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .message {
     color: #666;
-    font-size: 16px;
-    line-height: 1.6;
+    font-size: 17px;
+    line-height: 1.8;
+    margin-bottom: 35px;
+    padding: 0 20px;
+}
+
+.error-details {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
     margin-bottom: 30px;
+    text-align: left;
+}
+
+.error-details h4 {
+    color: #333;
+    margin: 0 0 15px 0;
+    font-size: 16px;
+}
+
+.error-details p {
+    color: #666;
+    margin: 5px 0;
+    font-size: 14px;
+    line-height: 1.6;
 }
 
 .action-buttons {
     display: flex;
     gap: 15px;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .btn {
-    padding: 12px 30px;
+    padding: 14px 32px;
     border: none;
-    border-radius: 8px;
+    border-radius: 30px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
 }
 
 .btn-primary {
-    background-color: #ff6f91;
+    background: linear-gradient(135deg, #ff6f91 0%, #ff3f6f 100%);
     color: #fff;
+    box-shadow: 0 4px 15px rgba(255, 111, 145, 0.3);
 }
 
 .btn-primary:hover {
-    background-color: #ff3f6f;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 111, 145, 0.4);
+    color: #fff;
 }
 
 .btn-secondary {
-    background-color: #f0f0f0;
+    background: #f0f0f0;
     color: #333;
 }
 
 .btn-secondary:hover {
-    background-color: #e0e0e0;
+    background: #e0e0e0;
+    transform: translateY(-2px);
+    color: #333;
+}
+
+.help-text {
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid #e0e0e0;
+    color: #888;
+    font-size: 14px;
 }
 </style>
 
-<div class="payment-failed-container">
-    <div class="failed-icon">❌</div>
-    <h2>Payment Failed</h2>
-    
-    {% if status %}
-    <div class="status-badge">{{ status }}</div>
-    {% endif %}
-    
-    <p class="message">
-        {{ message|default:"Your payment could not be completed. Please try again or contact support if the problem persists." }}
-    </p>
-    
-    <div class="action-buttons">
-        <a href="{% url 'checkout' %}" class="btn btn-primary">Try Again</a>
-        <a href="{% url 'shop_home' %}" class="btn btn-secondary">Continue Shopping</a>
+<div class="failed-wrapper">
+    <div class="payment-failed-container">
+        <div class="failed-header">
+            <div class="failed-icon">❌</div>
+            <h2>Payment Failed</h2>
+            <p>We couldn't process your payment</p>
+        </div>
+        
+        <div class="failed-body">
+            {% if status %}
+            <div class="status-badge">{{ status }}</div>
+            {% endif %}
+            
+            <p class="message">
+                {{ message|default:"Your payment could not be completed. This could be due to insufficient funds, incorrect payment details, or a network issue. Please check your payment method and try again." }}
+            </p>
+            
+            <div class="error-details">
+                <h4>💡 What you can do:</h4>
+                <p>✓ Check your payment method details</p>
+                <p>✓ Ensure you have sufficient balance</p>
+                <p>✓ Try a different payment method</p>
+                <p>✓ Contact your bank if the issue persists</p>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="{% url 'checkout' %}" class="btn btn-primary">Try Again</a>
+                <a href="{% url 'shop_home' %}" class="btn btn-secondary">Continue Shopping</a>
     </div>
 </div>
 
