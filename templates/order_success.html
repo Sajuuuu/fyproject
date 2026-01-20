@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% block title %}Order Success - Pethood{% endblock %}
+{% load static %}
+{% block content %}
+
+<style>
+body {
+    background-color: #fff9f0;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+.success-container {
+    max-width: 600px;
+    margin: 80px auto;
+    text-align: center;
+    padding: 50px 30px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background-color: #4caf50;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 30px;
+}
+
+.success-icon svg {
+    width: 50px;
+    height: 50px;
+    fill: white;
+}
+
+.success-container h1 {
+    font-size: 32px;
+    color: #ff6f91;
+    margin-bottom: 15px;
+}
+
+.success-container p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.order-details {
+    background-color: #fff5f8;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 30px 0;
+    text-align: left;
+}
+
+.order-details h3 {
+    color: #ff6f91;
+    margin-bottom: 15px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ffe6f0;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.btn-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background-color: #ff6f91;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #ff3f6f;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: #fff;
+    color: #ff6f91;
+    border: 2px solid #ff6f91;
+}
+
+.btn-secondary:hover {
+    background-color: #ff6f91;
+    color: #fff;
+}
+
+@media screen and (max-width: 480px) {
+    .success-container {
+        margin: 40px 15px;
+        padding: 30px 20px;
+    }
+
+    .success-container h1 {
+        font-size: 24px;
+    }
+
+    .btn-group {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+</style>
+
+<div class="success-container">
+    <div class="success-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+        </svg>
+    </div>
+
+    <h1>Order Placed Successfully!</h1>
+    <p>Thank you for your order. We've received your order and will process it shortly.</p>
+
+    {% if order %}
+    <div class="order-details">
+        <h3>Order Details</h3>
+        <div class="detail-row">
+            <span>Order Number:</span>
+            <strong>{{ order.order_number }}</strong>
+        </div>
+        <div class="detail-row">
+            <span>Total Amount:</span>
+            <strong>रु{{ order.total_amount }}</strong>
+        </div>
+        <div class="detail-row">
+            <span>Payment Method:</span>
+            <strong>{{ order.payment_method|upper }}</strong>
+        </div>
+        <div class="detail-row">
+            <span>Status:</span>
+            <strong>{{ order.status }}</strong>
+        </div>
+    </div>
+    {% endif %}
+
+    <p>A confirmation email has been sent to your email address.</p>
+
+    <div class="btn-group">
+        <a href="{% url 'home' %}" class="btn btn-primary">Continue Shopping</a>
+        <a href="{% url 'shop_home' %}" class="btn btn-secondary">View Products</a>
+    </div>
+</div>
+
+{% endblock %}

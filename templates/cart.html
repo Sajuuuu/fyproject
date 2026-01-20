@@ -3,31 +3,7 @@
 {% load static %}
 {% block content %}
 
-<!-- Floating Cart -->
-<div id="floating-cart" style="
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #ffd6e0;
-      padding: 10px 15px;
-      border-radius: 50px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      z-index: 1000;
-      cursor: pointer;
-">
-    🛒 Cart: 
-    <span id="cart-count">
-        {% if request.user.is_authenticated %}
-            {% if request.user.cart %}
-                {{ request.user.cart.items.count }}
-            {% else %}
-                0
-            {% endif %}
-        {% else %}
-            0
-        {% endif %}
-    </span>
-</div>
+
 
 <style>
 /* General page style */
@@ -38,139 +14,396 @@ body {
 }
 
 h2 {
-    text-align: center;
+    text-align: left;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+h2 span {
     color: #ff6f91;
-    margin-bottom: 20px;
+}
+
+/* Cart container */
+.cart-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto 30px auto;
 }
 
 /* Table styling */
 .cart-table {
-    width: 90%;
-    margin: 0 auto 30px auto;
+    width: 100%;
     border-collapse: separate;
-    border-spacing: 0;
-    background-color: #fff;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-}
-
-.cart-table th, .cart-table td {
-    padding: 15px 20px;
-    text-align: center;
+    border-spacing: 0 15px;
+    background-color: transparent;
 }
 
 .cart-table th {
     background-color: #ffe6f0;
     color: #333;
     font-weight: bold;
+    font-size: 15px;
+    padding: 12px 15px;
+    text-align: center;
+    border-radius: 0;
+}
+
+.cart-table thead tr {
+    background-color: #ffe6f0;
+    border-radius: 8px;
+}
+
+.cart-table thead tr th:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.cart-table thead tr th:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.cart-table tr.cart-item {
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-radius: 12px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cart-table tr.cart-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.cart-table tr.cart-item td {
+    padding: 20px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #fff;
+}
+
+.cart-table tr.cart-item td:first-child {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.cart-table tr.cart-item td:last-child {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+/* Product image and name */
+.product-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-align: left;
+}
+
+.product-info img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    padding: 5px;
+}
+
+.product-info .product-name {
+    font-weight: 600;
     font-size: 16px;
+    color: #333;
 }
 
-.cart-table tr:nth-child(even) td {
-    background-color: #fff0f5;
+/* Quantity controls */
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
-.cart-table tr:nth-child(odd) td {
-    background-color: #fff5f8;
+.quantity-controls button {
+    background-color: #ff6f91;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.cart-table td button, .cart-table td a {
+.quantity-controls button:hover {
+    background-color: #ff3f6f;
+    transform: scale(1.1);
+}
+
+.quantity-controls button:active {
+    transform: scale(0.95);
+}
+
+.quantity-controls .quantity-display {
+    min-width: 40px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+}
+
+/* Price styling */
+.price-cell {
+    font-weight: 600;
+    font-size: 16px;
+    color: #ff6f91;
+}
+
+/* Remove button */
+.remove-btn {
     background-color: #ffd6e0;
     border: none;
     border-radius: 8px;
-    padding: 5px 10px;
+    padding: 8px 16px;
     color: #333;
     cursor: pointer;
     transition: 0.3s;
     text-decoration: none;
+    display: inline-block;
+    font-weight: 500;
 }
 
-.cart-table td button:hover, .cart-table td a:hover {
+.remove-btn:hover {
     background-color: #ffb3c6;
     color: #fff;
 }
 
 /* Total section */
 .total-section {
-    width: 90%;
-    margin: 0 auto;
+    width: 100%;
     text-align: right;
-    font-size: 20px;
+    font-size: 24px;
     color: #ff6f91;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin: 30px 0 20px 0;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 /* Checkout button */
 .checkout-btn {
     display: block;
-    width: 200px;
+    width: 250px;
     margin: 20px auto;
-    padding: 10px 20px;
+    padding: 15px 30px;
     text-align: center;
     background-color: #ff6f91;
     color: #fff;
     border-radius: 25px;
     font-weight: bold;
+    font-size: 16px;
     text-decoration: none;
     transition: 0.3s;
+    box-shadow: 0 4px 12px rgba(255, 111, 145, 0.3);
 }
 
 .checkout-btn:hover {
     background-color: #ff3f6f;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 111, 145, 0.4);
 }
 
-/* Input field styling */
-input[type="number"] {
-    width: 60px;
-    padding: 5px;
-    border: 1px solid #ffcce0;
-    border-radius: 6px;
+/* Empty cart message */
+.empty-cart {
     text-align: center;
+    padding: 60px 20px;
+    color: #999;
+    font-size: 18px;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .cart-container {
+        width: 95%;
+    }
+
+    .cart-table {
+        border-spacing: 0 10px;
+    }
+
+    .cart-table th {
+        font-size: 13px;
+        padding: 10px 8px;
+    }
+
+    .cart-table tr.cart-item td {
+        padding: 12px 8px;
+        font-size: 14px;
+    }
+
+    .product-info {
+        gap: 10px;
+    }
+
+    .product-info img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .product-info .product-name {
+        font-size: 14px;
+    }
+
+    .quantity-controls button {
+        width: 28px;
+        height: 28px;
+        font-size: 16px;
+    }
+
+    .quantity-controls .quantity-display {
+        min-width: 30px;
+        font-size: 14px;
+    }
+
+    .price-cell {
+        font-size: 14px;
+    }
+
+    .total-section {
+        font-size: 20px;
+        padding: 15px;
+    }
+
+    .checkout-btn {
+        width: 200px;
+        padding: 12px 24px;
+        font-size: 15px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    h2 {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+
+    .cart-table thead {
+        display: none;
+    }
+
+    .cart-table tr.cart-item {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .cart-table tr.cart-item td {
+        padding: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 0 !important;
+    }
+
+    .cart-table tr.cart-item td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #ff6f91;
+        font-size: 13px;
+    }
+
+    .product-info {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .quantity-controls,
+    .price-cell,
+    .remove-btn {
+        margin-left: auto;
+    }
+
+    .total-section {
+        font-size: 18px;
+        padding: 12px;
+    }
+
+    .checkout-btn {
+        width: 100%;
+        max-width: 300px;
+    }
 }
 </style>
 
-<h2>Your Cart</h2>
 
-<table class="cart-table">
-<tr>
-    <th>Product</th>
-    <th>Size</th>
-    <th>Quantity</th>
-    <th>Price</th>
-    <th>Subtotal</th>
-    <th>Actions</th>
-</tr>
-{% for item in items %}
-<tr>
-    <td>{{ item.product.name }}</td>
-    <td>{{ item.size }}</td>
-    <td>
-        <form method="post" action="{% url 'update_cart_item' item.id %}" class="update-form">
-            {% csrf_token %}
-            <input type="number" name="quantity" value="{{ item.quantity }}" min="0">
-            <button type="submit">Update</button>
-        </form>
-    </td>
-    <td>${{ item.product.price }}</td>
-    <td>${{ item.subtotal }}</td>
-    <td>
-        <a href="{% url 'remove_cart_item' item.id %}" class="remove-btn">Remove</a>
-    </td>
-</tr>
-{% empty %}
-<tr>
-    <td colspan="6">Your cart is empty.</td>
-</tr>
-{% endfor %}
-</table>
+<div class="cart-container">
+<h2>MY <span>CART</span></h2>
+    <table class="cart-table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Size</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Subtotal</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in items %}
+    <tr class="cart-item">
+        <td data-label="Product">
+            <div class="product-info">
+                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                <span class="product-name">{{ item.product.name }}</span>
+            </div>
+        </td>
+        <td data-label="Size">{{ item.size }}</td>
+        <td data-label="Quantity">
+            <div class="quantity-controls">
+                <form method="post" action="{% url 'update_cart_item' item.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="quantity" value="{{ item.quantity|add:'-1' }}">
+                    <button type="submit" {% if item.quantity <= 1 %}disabled{% endif %}>−</button>
+                </form>
+                <span class="quantity-display">{{ item.quantity }}</span>
+                <form method="post" action="{% url 'update_cart_item' item.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="quantity" value="{{ item.quantity|add:'1' }}">
+                    <button type="submit">+</button>
+                </form>
+            </div>
+        </td>
+        <td data-label="Price" class="price-cell">रु{{ item.product.price }}</td>
+        <td data-label="Subtotal" class="price-cell">रु{{ item.subtotal }}</td>
+        <td data-label="">
+            <a href="{% url 'remove_cart_item' item.id %}" class="remove-btn">Remove</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="6" class="empty-cart">Your cart is empty.</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    </table>
 
-<div class="total-section">
-    Total: ${{ total }}
+    <div class="total-section">
+        Total: रु{{ total }}
+    </div>
+
+    <a href="{% url 'checkout' %}" class="checkout-btn">Proceed to Checkout</a>
 </div>
-
-<a href="{#}" class="checkout-btn">Proceed to Checkout</a>
 
 <script>
 // Floating cart click to go to cart page
@@ -180,15 +413,6 @@ if(floatingCart){
         window.location.href = "{% url 'cart_view' %}";
     });
 }
-
-// Highlight row when quantity changes
-document.querySelectorAll('.update-form input[type="number"]').forEach(input => {
-    input.addEventListener('change', function() {
-        let row = this.closest('tr');
-        row.style.backgroundColor = '#ffe6f0';
-        setTimeout(() => { row.style.backgroundColor = ''; }, 400);
-    });
-});
 </script>
 
 {% endblock %}

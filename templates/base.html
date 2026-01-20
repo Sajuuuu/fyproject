@@ -9,116 +9,13 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
-
-    /* Navbar styles */
-    .navbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 30px;
-      background: #fff;
-      border-bottom: 1px solid #eee;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-    }
-
-    .logo img {
-      height: 100px;
-      margin-right: 10px;
-    }
-
-    .brand {
-      font-size: 18px;
-      font-weight: bold;
-      color: #000;
-    }
-
-    .brand-highlight {
-      color: #b30047;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 25px;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: #344055;
-      font-weight: 600;
-      font-size: 14px;
-      position: relative;
-    }
-
-    .nav-links a.active::after {
-      content: "";
-      position: absolute;
-      bottom: -5px;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background-color: #344055;
-    }
-
-    .icons {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      font-size: 18px;
-      color: #344055;
-    }
-
-    .icons a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .cart {
-      position: relative;
-    }
-
-    .cart-count {
-      position: absolute;
-      top: -6px;
-      right: -10px;
-      background-color: #000;
-      color: #fff;
-      font-size: 10px;
-      font-weight: bold;
-      border-radius: 50%;
-      padding: 2px 5px;
-    }
-
-    /* Logout button/icon styling */
-    .logout {
-      background: none;
-      border: none;
-      font-size: 18px;
-      color: #344055;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      padding: 0;
-    }
-
-    .logout:hover {
-      color: #b30047;
-    }
-
-    .logout i {
-      margin-right: 0;
-    }
-  </style>
+  <!-- Base CSS -->
+  <link rel="stylesheet" href="{% static 'base.css' %}" />
 </head>
 <body>
+
+  <!-- Overlay for mobile menu -->
+  <div class="overlay" id="overlay"></div>
 
   <!-- Navbar -->
   <header class="navbar">
@@ -127,40 +24,157 @@
       <span class="brand">PET <span class="brand-highlight">HOOD</span></span>
     </div>
 
-    <nav class="nav-links">
+    <nav class="nav-links" id="navLinks">
       <a href="{% url 'home' %}">HOME</a>
       <a href="{% url 'shop_home' %}">COLLECTION</a>
       <a href="#">ABOUT US</a>
-      <a href="#">OUR DOGS</a>
+      <a href="{% url 'dog:dog_list' %}">OUR DOGS</a>
       <a href="#">MY ADOPTION</a>
       <a href="#">SERVICES</a>
+      
+      <!-- Mobile-only user menu items -->
+      <div class="mobile-user-menu">
+        {% if user.is_authenticated %}
+          <a href="{% url 'cart_view' %}" class="mobile-menu-item">
+            <i class="fas fa-shopping-bag"></i>
+            <span>Basket</span>
+            {% if cart_count > 0 %}
+              <span class="cart-badge">{{ cart_count }}</span>
+            {% endif %}
+          </a>
+          <a href="{% url 'profile' %}" class="mobile-menu-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+          </a>
+          <form action="{% url 'logout' %}" method="post" class="mobile-logout-form">
+            {% csrf_token %}
+            <button type="submit" class="mobile-menu-item">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Logout</span>
+            </button>
+          </form>
+        {% else %}
+          <a href="{% url 'signin' %}" class="mobile-menu-item">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>Login</span>
+          </a>
+        {% endif %}
+      </div>
     </nav>
 
     <div class="icons">
-      <!-- Search Icon -->
-      <a href="#"><i class="fas fa-search"></i></a>
-
-      <!-- User/Login Icon -->
-      <a href="{% url 'signin' %}"><i class="fas fa-user"></i></a>
+      <!-- Search Bar -->
+      <div class="search-container">
+        <input type="text" class="search-bar" placeholder="Search...">
+        <i class="fas fa-search search-icon"></i>
+      </div>
 
       <!-- Cart Icon -->
-      <a href="{% url 'cart_view' %}" class="cart">
-        <i class="fas fa-shopping-bag"></i>
-        <span class="cart-count">{{ cart_count }}</span>
+      {% if user.is_authenticated %}
+      <a href="{% url 'cart_view' %}" class="cart-icon-link">
+        <div class="cart-icon-wrapper">
+          <i class="fas fa-shopping-bag"></i>
+          {% if cart_count > 0 %}
+          <span class="cart-badge" id="cart-badge">{{ cart_count }}</span>
+          {% endif %}
+        </div>
       </a>
+      {% endif %}
 
-      <!-- Logout Icon -->
-      <form action="{% url 'logout' %}" method="post" style="display:inline;">
-        {% csrf_token %}
-        <button type="submit" class="logout">
-          <i class="fas fa-sign-out-alt"></i>
-        </button>
-      </form>
+      <!-- User Dropdown -->
+      <div class="user-dropdown">
+        <div class="user-icon" id="userIcon">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="dropdown-menu" id="dropdownMenu">
+          {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}">
+              <i class="fas fa-user"></i>
+              <span>Profile</span>
+            </a>
+            <div class="divider"></div>
+            <form action="{% url 'logout' %}" method="post" style="margin: 0;">
+              {% csrf_token %}
+              <button type="submit">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+              </button>
+            </form>
+          {% else %}
+            <a href="{% url 'login' %}">
+              <i class="fas fa-sign-in-alt"></i>
+              <span>Login</span>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Hamburger Menu -->
+    <div class="hamburger" id="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
   </header>
 
   <!-- Page content -->
   {% block content %}{% endblock %}
+
+  <!-- JavaScript for mobile menu and dropdown -->
+  <script>
+    // Hamburger menu toggle
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    const overlay = document.getElementById('overlay');
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      navLinks.classList.toggle('active');
+      overlay.classList.toggle('active');
+    });
+
+    overlay.addEventListener('click', () => {
+      hamburger.classList.remove('active');
+      navLinks.classList.remove('active');
+      overlay.classList.remove('active');
+    });
+
+    // Close menu when clicking a link (but not for forms)
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+        overlay.classList.remove('active');
+      });
+    });
+
+    // Close menu when submitting logout form
+    const logoutForm = navLinks.querySelector('.mobile-logout-form');
+    if (logoutForm) {
+      logoutForm.addEventListener('submit', () => {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+        overlay.classList.remove('active');
+      });
+    }
+
+    // User dropdown toggle
+    const userIcon = document.getElementById('userIcon');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    userIcon.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdownMenu.classList.toggle('active');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!userIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.classList.remove('active');
+      }
+    });
+  </script>
 
 </body>
 </html>

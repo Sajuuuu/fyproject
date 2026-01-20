@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% block title %}Dogs for Adoption - Pethood{% endblock %}
+{% load static %}
+{% block content %}
+
+<style>
+.adoption-header {
+    text-align: center;
+    padding: 40px 20px;
+    margin-bottom: 40px;
+}
+
+.adoption-header h1 {
+    font-size: 42px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.adoption-header p {
+    font-size: 18px;
+    opacity: 0.95;
+}
+
+.adoption-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+}
+
+.dogs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.dog-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.dog-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.dog-image {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    background: #f5f5f5;
+}
+
+.dog-info {
+    padding: 20px;
+}
+
+.dog-name {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.dog-breed {
+    font-size: 16px;
+    color: #ff6f91;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.dog-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #666;
+}
+
+.dog-description {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.dog-price {
+    font-size: 22px;
+    font-weight: bold;
+    color: #2ecc71;
+    text-align: center;
+    padding: 12px;
+    background: #f0f9f4;
+    border-radius: 8px;
+}
+
+.no-dogs {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+}
+
+.no-dogs i {
+    font-size: 80px;
+    color: #ddd;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .adoption-header h1 {
+        font-size: 32px;
+    }
+    
+    .dogs-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+</style>
+
+
+<div class="adoption-container">
+    {% if dogs %}
+    <div class="dogs-grid">
+        {% for dog in dogs %}
+        <a href="{% url 'dog:dog_detail' dog.slug %}" class="dog-card">
+            {% if dog.image %}
+            <img src="{{ dog.image.url }}" alt="{{ dog.name }}" class="dog-image">
+            {% else %}
+            <div class="dog-image" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); font-size: 80px;">
+                <i class="fas fa-dog"></i>
+            </div>
+            {% endif %}
+            
+            <div class="dog-info">
+                <h3 class="dog-name">{{ dog.name }}</h3>
+                <div class="dog-breed">{{ dog.breed }}</div>
+                
+                <div class="dog-details">
+                    <span><strong>Age:</strong> {{ dog.age }}</span>
+                </div>
+                
+                <p class="dog-description">{{ dog.description }}</p>
+                
+                <div class="dog-price">
+                    Adoption Fee: रु{{ dog.price }}
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-dogs">
+        <i class="fas fa-dog"></i>
+        <h2>No dogs available for adoption right now</h2>
+        <p>Please check back soon!</p>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

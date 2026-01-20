@@ -3,6 +3,7 @@
   {% load static %}
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Signup - Pethood</title>
   <style>
     body {
@@ -64,6 +65,7 @@
       border-radius: 8px;
       font-size: 14.5px;
       background: white;
+      box-sizing: border-box;
     }
 
     button {
@@ -107,14 +109,72 @@
     }
 
     @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+      }
+
       .bg-image {
-        width: 95vw;
-        opacity: 0.7;
+        display: none;
       }
 
       .signup-box {
-        max-width: 90%;
-        padding: 38px 20px;
+        max-width: none;
+        width: 100%;
+        padding: 40px 25px;
+        border-radius: 12px;
+      }
+
+      .signup-box h2 {
+        font-size: 28px;
+        margin-bottom: 30px;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="password"] {
+        padding: 16px;
+        font-size: 16px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+      }
+
+      button {
+        padding: 16px;
+        font-size: 18px;
+        border-radius: 10px;
+      }
+
+      .login-link {
+        font-size: 16px;
+        margin-top: 20px;
+      }
+
+      .error-message {
+        font-size: 15px;
+        padding: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 8px;
+      }
+
+      .signup-box {
+        padding: 35px 20px;
+      }
+
+      .signup-box h2 {
+        font-size: 26px;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="password"] {
+        padding: 15px;
       }
     }
   </style>

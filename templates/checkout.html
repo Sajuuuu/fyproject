@@ -1,0 +1,745 @@
+{% extends 'base.html' %}
+{% block title %}Checkout - Pethood{% endblock %}
+{% load static %}
+{% block content %}
+
+<style>
+/* General page style */
+body {
+    background-color: #fff9f0;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+h2 {
+    text-align: left;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+h2 span {
+    color: #ff6f91;
+}
+
+/* Checkout container */
+.checkout-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto 30px auto;
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 30px;
+}
+
+/* Billing form */
+.billing-section {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.billing-section h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #ff6f91;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ffe6f0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #ff6f91;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* Order summary */
+.order-summary {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+}
+
+.order-summary h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #ff6f91;
+}
+
+.order-item {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ffe6f0;
+}
+
+.order-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.order-item-info {
+    flex: 1;
+}
+
+.order-item-name {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.order-item-details {
+    font-size: 13px;
+    color: #666;
+}
+
+.order-item-price {
+    font-weight: 600;
+    color: #ff6f91;
+}
+
+.order-totals {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid #ffe6f0;
+}
+
+.order-totals .total-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.order-totals .total-row.grand-total {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ff6f91;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid #ffe6f0;
+}
+
+/* Payment section */
+.payment-section {
+    margin-top: 30px;
+    padding: 25px;
+    background-color: #fff5f8;
+    border-radius: 12px;
+}
+
+.payment-section h4 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.payment-methods {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.payment-method {
+    flex: 1;
+    padding: 15px;
+    border: 2px solid #ffe6f0;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.payment-method:hover {
+    border-color: #ff6f91;
+    background-color: #fff;
+}
+
+.payment-method.active {
+    border-color: #ff6f91;
+    background-color: #fff;
+}
+
+.payment-method input[type="radio"] {
+    margin-right: 8px;
+}
+
+/* Place order button */
+.place-order-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #ff6f91;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 20px;
+}
+
+.place-order-btn:hover {
+    background-color: #ff3f6f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 111, 145, 0.3);
+}
+
+.place-order-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Khalti payment button */
+#khalti-payment-button {
+    width: 100%;
+    padding: 15px;
+    background-color: #5c2d91;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+#khalti-payment-button:hover {
+    background-color: #4a2373;
+}
+
+/* Saved Addresses */
+.saved-addresses-section h4 {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.btn-add-address {
+    padding: 6px 16px;
+    height: 32px;
+    background-color: #ff6f91;
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.btn-add-address:hover {
+    background-color: #ff3f6f;
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(255, 111, 145, 0.3);
+}
+
+.saved-addresses {
+    display: grid;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.saved-address-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 15px;
+    border: 2px solid #ffe6f0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.saved-address-card:hover {
+    border-color: #ff6f91;
+    background-color: #fff5f8;
+}
+
+.saved-address-card.selected {
+    border-color: #ff6f91;
+    background-color: #fff;
+}
+
+.saved-address-card input[type="radio"] {
+    margin-top: 3px;
+}
+
+.address-info {
+    flex: 1;
+}
+
+.address-info strong {
+    color: #ff6f91;
+    font-size: 14px;
+}
+
+.address-info p {
+    margin: 3px 0;
+    font-size: 13px;
+    color: #666;
+}
+
+.default-badge-small {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    margin-left: 8px;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+    .checkout-container {
+        grid-template-columns: 1fr;
+    }
+
+    .order-summary {
+        position: static;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .checkout-container {
+        width: 95%;
+        gap: 20px;
+    }
+
+    .billing-section,
+    .order-summary {
+        padding: 20px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .payment-methods {
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    h2 {
+        font-size: 22px;
+    }
+
+    .billing-section h3,
+    .order-summary h3 {
+        font-size: 18px;
+    }
+
+    .order-item img {
+        width: 50px;
+        height: 50px;
+    }
+}
+</style>
+
+{% if is_buy_now %}
+<div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px auto; max-width: 1200px; border-radius: 8px; color: #856404;">
+    <strong>Quick Checkout:</strong> You're checking out this single item. <a href="/cart/" style="color: #856404; text-decoration: underline;">View full cart</a> or <a href="/shop" style="color: #856404; text-decoration: underline;">continue shopping</a>
+</div>
+{% endif %}
+
+<h2>CHECK<span>OUT</span></h2>
+
+<div class="checkout-container">
+    <!-- Billing Information -->
+    <div class="billing-section">
+        <h3>Billing Information</h3>
+        
+        {% if addresses %}
+        <div class="saved-addresses-section">
+            <h4>
+                <span>Select Address</span>
+                <button type="button" class="btn-add-address" onclick="useNewAddress()" title="Add new address">+</button>
+            </h4>
+            <div class="saved-addresses">
+                {% for address in addresses %}
+                <div class="saved-address-card {% if address.is_default %}selected{% endif %}" data-address-id="{{ address.id }}" onclick="selectAddress({{ address.id }}, '{{ address.address_line|escapejs }}', '{{ address.city }}', '{{ address.postal_code }}', '{{ address.phone }}')">
+                    <input type="radio" name="address_selection" value="{{ address.id }}" {% if address.is_default %}checked{% endif %}>
+                    <div class="address-info">
+                        <strong>{{ address.label }}</strong>
+                        {% if address.is_default %}<span class="default-badge-small">DEFAULT</span>{% endif %}
+                        <p>{{ address.address_line }}</p>
+                        <p>{{ address.city }}{% if address.postal_code %}, {{ address.postal_code }}{% endif %}</p>
+                        <p>📞 {{ address.phone }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <hr style="margin: 20px 0; border: none; border-top: 2px solid #ffe6f0;">
+        </div>
+        {% endif %}
+        
+        <form id="checkout-form" method="post">
+            {% csrf_token %}
+            <input type="hidden" id="saved_address_id" name="saved_address_id" value="{% if default_address %}{{ default_address.id }}{% endif %}">
+            
+            <div id="manual-form" {% if default_address %}style="display: none;"{% endif %}>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="first_name">First Name *</label>
+                        <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Last Name *</label>
+                        <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" value="{{ user.email }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Address *</label>
+                    <input type="text" id="address" name="address">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">City *</label>
+                        <input type="text" id="city" name="city">
+                    </div>
+                    <div class="form-group">
+                        <label for="postal_code">Postal Code</label>
+                        <input type="text" id="postal_code" name="postal_code">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="notes">Order Notes (Optional)</label>
+                <textarea id="notes" name="notes" placeholder=""></textarea>
+            </div>
+
+            {% if not addresses or not default_address %}
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" name="save_address" id="save_address" checked style="width: auto; margin: 0;">
+                    <span style="font-weight: normal;">Save this address for future orders</span>
+                </label>
+            </div>
+            {% endif %}
+
+            <div class="payment-section">
+                <h4>Payment Method</h4>
+                <div class="payment-methods">
+                    <label class="payment-method active">
+                        <input type="radio" name="payment_method" value="khalti" checked>
+                        Khalti Payment
+                    </label>
+                    <label class="payment-method">
+                        <input type="radio" name="payment_method" value="cod">
+                        Cash on Delivery
+                    </label>
+                </div>
+
+                <button type="button" id="khalti-payment-button">
+                    <span>Pay with Khalti</span>
+                </button>
+                <button type="submit" class="place-order-btn" id="cod-button" style="display: none;">
+                    Place Order (Cash on Delivery)
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="order-summary">
+        <h3>Order Summary</h3>
+        
+        {% for item in items %}
+        <div class="order-item">
+            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+            <div class="order-item-info">
+                <div class="order-item-name">{{ item.product.name }}</div>
+                <div class="order-item-details">
+                    {% if item.size %}Size: {{ item.size }} | {% endif %}Qty: {{ item.quantity }}
+                </div>
+                <div class="order-item-price">रु{{ item.subtotal }}</div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="order-totals">
+            <div class="total-row">
+                <span>Subtotal:</span>
+                <span>रु{{ total }}</span>
+            </div>
+            <div class="total-row">
+                <span>Shipping:</span>
+                <span>रु5.00</span>
+            </div>
+            <div class="total-row grand-total">
+                <span>Total:</span>
+                <span id="grand-total">रु{{ total|add:5 }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Khalti Checkout Script -->
+<script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
+
+<script>
+    console.log('Khalti Public Key:', '{{ khalti_public_key }}');
+    
+    // Address selection
+    function selectAddress(id, address, city, postal, phone) {
+        // Update hidden field
+        document.getElementById('saved_address_id').value = id;
+        
+        // Update visual selection
+        document.querySelectorAll('.saved-address-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        event.currentTarget.classList.add('selected');
+        
+        // Hide manual form
+        document.getElementById('manual-form').style.display = 'none';
+        
+        // Update form fields (for display purposes)
+        document.getElementById('phone').value = phone;
+        document.getElementById('address').value = address;
+        document.getElementById('city').value = city;
+        document.getElementById('postal_code').value = postal;
+    }
+    
+    function useNewAddress() {
+        // Clear saved address selection
+        document.getElementById('saved_address_id').value = '';
+        
+        // Uncheck all radio buttons
+        document.querySelectorAll('input[name="address_selection"]').forEach(radio => {
+            radio.checked = false;
+        });
+        
+        // Remove visual selection
+        document.querySelectorAll('.saved-address-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        
+        // Show manual form
+        document.getElementById('manual-form').style.display = 'block';
+        
+        // Clear form fields
+        document.getElementById('phone').value = '';
+        document.getElementById('address').value = '';
+        document.getElementById('city').value = '';
+        document.getElementById('postal_code').value = '';
+    }
+
+    // Payment method toggle
+    document.querySelectorAll('.payment-method').forEach(method => {
+        method.addEventListener('click', function() {
+            document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
+            this.classList.add('active');
+            const radio = this.querySelector('input[type="radio"]');
+            radio.checked = true;
+            
+            // Toggle payment buttons
+            const khaltiBtn = document.getElementById('khalti-payment-button');
+            const codBtn = document.getElementById('cod-button');
+            
+            if (radio.value === 'khalti') {
+                khaltiBtn.style.display = 'flex';
+                codBtn.style.display = 'none';
+            } else {
+                khaltiBtn.style.display = 'none';
+                codBtn.style.display = 'block';
+            }
+        });
+    });
+
+    // Khalti Configuration
+    var config = {
+        "publicKey": "{{ khalti_public_key }}",
+        "productIdentity": "{{ cart.id }}",
+        "productName": "Pethood Order",
+        "productUrl": "{{ request.build_absolute_uri }}",
+        "environment": "TEST",  // Force test environment
+        "paymentPreference": [
+            "KHALTI",
+            "EBANKING",
+            "MOBILE_BANKING",
+            "CONNECT_IPS",
+            "SCT"
+        ],
+        "eventHandler": {
+            onSuccess(payload) {
+                console.log(payload);
+                // Send payment data to backend
+                fetch("{% url 'khalti_verify' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        token: payload.token,
+                        amount: payload.amount,
+                        billing_info: getFormData(),
+                        saved_address_id: document.getElementById('saved_address_id').value
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = "{% url 'order_success' %}";
+                    } else {
+                        alert('Payment verification failed. Please contact support.');
+                    }
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                    alert('Payment processing error. Please contact support.');
+                });
+            },
+            onError(error) {
+                console.log(error);
+                alert('Payment failed. Please try again.');
+            },
+            onClose() {
+                console.log('Payment widget closed');
+            }
+        }
+    };
+
+    var checkout = new KhaltiCheckout(config);
+
+    // Get form data
+    function getFormData() {
+        const savedAddressId = document.getElementById('saved_address_id').value;
+        
+        return {
+            saved_address_id: savedAddressId,
+            first_name: document.getElementById('first_name').value,
+            last_name: document.getElementById('last_name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            address: document.getElementById('address').value,
+            city: document.getElementById('city').value,
+            postal_code: document.getElementById('postal_code').value,
+            notes: document.getElementById('notes').value
+        };
+    }
+
+    // Validate form
+    function validateForm() {
+        const savedAddressId = document.getElementById('saved_address_id').value;
+        
+        // If using saved address, validation passes
+        if (savedAddressId) {
+            return true;
+        }
+        
+        // Otherwise validate manual input fields
+        const form = document.getElementById('checkout-form');
+        const manualForm = document.getElementById('manual-form');
+        
+        // Make manual form fields required if no saved address selected
+        const requiredFields = manualForm.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]');
+        requiredFields.forEach(field => {
+            if (field.id !== 'postal_code' && field.id !== 'notes') {
+                field.required = true;
+            }
+        });
+        
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return false;
+        }
+        return true;
+    }
+
+    // Khalti payment button
+    document.getElementById('khalti-payment-button').addEventListener('click', function() {
+        if (!validateForm()) {
+            return;
+        }
+
+        const total = parseFloat({{ total|add:5|floatformat:2 }}) * 100; // Convert to paisa (Khalti uses paisa)
+        
+        checkout.show({amount: Math.round(total)});
+    });
+
+    // COD form submission
+    document.getElementById('checkout-form').addEventListener('submit', function(e) {
+        const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+        
+        if (paymentMethod === 'khalti') {
+            e.preventDefault();
+            return false;
+        }
+        
+        // COD submission continues normally
+        return true;
+    });
+</script>
+
+{% endblock %}

@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 from django.urls import reverse_lazy
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,12 +23,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-l96!k3uxrd#b#qid%@3$zq-d5m^6qi*d!esq%&*fkb5f$pne7^'
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-l96!k3uxrd#b#qid%@3$zq-d5m^6qi*d!esq%&*fkb5f$pne7^')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = []
+
+# Khalti Payment Gateway Settings
+KHALTI_PUBLIC_KEY = config('KHALTI_PUBLIC_KEY', default='test_public_key_dc74e0fd57cb46cd93832aee0a507256')
+KHALTI_SECRET_KEY = config('KHALTI_SECRET_KEY', default='test_secret_key_f59e8b7d18b4499ca40f68195a846e9b')
+KHALTI_INITIATE_URL = config('KHALTI_INITIATE_URL', default='https://khalti.com/api/v2/epayment/initiate/')
+KHALTI_VERIFY_URL = config('KHALTI_VERIFY_URL', default='https://khalti.com/api/v2/payment/verify/')
 
 
 # Application definition
@@ -41,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'userauth',
     'shop',
+    'dog',
 ]
 
 MIDDLEWARE = [
@@ -132,6 +140,6 @@ MEDIA_ROOT = BASE_DIR /'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-LOGIN_URL = reverse_lazy('login')          # login page
-LOGIN_REDIRECT_URL = 'home'                # after login
-LOGOUT_REDIRECT_URL = 'home'               # after logout
+LOGIN_URL = reverse_lazy('login')          
+LOGIN_REDIRECT_URL = 'home'                
+LOGOUT_REDIRECT_URL = 'home'              

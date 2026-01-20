@@ -43,10 +43,10 @@
     <!-- Product Grid -->
     <div class="product-grid">
       {% for product in products %}
-        <a href="{% url 'productdetails' product.id %}" class="product-card">
+        <a href="{% url 'productdetails' product.slug %}" class="product-card">
           <img src="{{ product.image.url }}" alt="{{ product.name }}">
           <h4>{{ product.name }}</h4>
-          <p class="price">${{ product.price }}</p>
+          <p class="price">रु{{ product.price }}</p>
         </a>
       {% empty %}
         <p>No products found.</p>
@@ -166,8 +166,9 @@ body {
   font-weight: bold;
 }
 
-/* Show dropdown on hover */
-.filters-dropdown:hover .dropdown-content {
+/* Show dropdown on hover (desktop) and click (mobile) */
+.filters-dropdown:hover .dropdown-content,
+.filters-dropdown.active .dropdown-content {
   display: block;
 }
 
@@ -221,6 +222,158 @@ body {
   font-weight: bold;
   font-size: 15px;
 }
+
+/* Responsive Design */
+/* Tablet (1024px and below) */
+@media screen and (max-width: 1024px) {
+  .collections-container {
+    padding: 0 20px;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+  }
+
+  .products-header h2 {
+    font-size: 20px;
+  }
+}
+
+/* Small Tablet/Large Phone (768px and below) */
+@media screen and (max-width: 768px) {
+  .products-header {
+    background: #fffbea;
+    padding: 10px 0;
+    margin-bottom: 15px;
+  }
+
+  .products-header h2 {
+    font-size: 18px;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .controls {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+  }
+
+  .product-card img {
+    height: 150px;
+  }
+
+  .product-card h4 {
+    font-size: 14px;
+  }
+
+  .price {
+    font-size: 14px;
+  }
+}
+
+/* Mobile (480px and below) */
+@media screen and (max-width: 480px) {
+  .collections-container {
+    margin: 10px auto;
+    padding: 0 10px;
+  }
+
+  .products-header {
+    padding: 8px 0;
+  }
+
+  .products-header h2 {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .controls {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .dropdown-btn {
+    padding: 5px 10px;
+    font-size: 13px;
+  }
+
+  .sort-form select {
+    padding: 5px 8px;
+    font-size: 13px;
+  }
+
+  .dropdown-content {
+    min-width: 150px;
+    padding: 8px;
+  }
+
+  .dropdown-content h4 {
+    font-size: 12px;
+  }
+
+  .dropdown-content a {
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .product-card {
+    padding: 10px;
+  }
+
+  .product-card img {
+    height: 120px;
+  }
+
+  .product-card h4 {
+    font-size: 13px;
+    margin: 6px 0;
+  }
+
+  .price {
+    font-size: 13px;
+  }
+}
+
+/* Extra Small Phones (360px and below) */
+@media screen and (max-width: 360px) {
+  .products-header {
+    top: 60px;
+  }
+
+  .products-header h2 {
+    font-size: 14px;
+  }
+
+  .dropdown-btn,
+  .sort-form select {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .product-card img {
+    height: 100px;
+  }
+
+  .product-card h4 {
+    font-size: 12px;
+  }
+
+  .price {
+    font-size: 12px;
+  }
+}
 </style>
 
 <script>
@@ -229,6 +382,33 @@ body {
     if (sortSelect) {
       sortSelect.addEventListener("change", () => {
         sortSelect.form.submit();
+      });
+    }
+
+    // Handle filters dropdown for mobile
+    const filtersDropdown = document.querySelector('.filters-dropdown');
+    const dropdownBtn = document.querySelector('.dropdown-btn');
+    const dropdownContent = document.querySelector('.dropdown-content');
+
+    if (dropdownBtn && filtersDropdown) {
+      // Toggle dropdown on button click
+      dropdownBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        filtersDropdown.classList.toggle('active');
+      });
+
+      // Prevent dropdown from closing when clicking inside it
+      if (dropdownContent) {
+        dropdownContent.addEventListener('click', (e) => {
+          e.stopPropagation();
+        });
+      }
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!filtersDropdown.contains(e.target)) {
+          filtersDropdown.classList.remove('active');
+        }
       });
     }
   });
