@@ -1,42 +1,30 @@
 {% extends 'base.html' %}
 {% block title %}Payment Failed - Pethood{% endblock %}
+{% load static %}
 {% block content %}
 
 <style>
 body {
-    background: linear-gradient(135deg, #fff9f0 0%, #ffe6f0 100%);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    min-height: 100vh;
+    background-color: #fff9f0;
+    font-family: 'Arial', sans-serif;
 }
 
-.failed-wrapper {
-    padding: 60px 20px;
-}
-
-.payment-failed-container {
+.failed-container {
+    width: 90%;
     max-width: 600px;
-    margin: 0 auto;
-    background: #fff;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(255, 111, 145, 0.15);
-    overflow: hidden;
-    animation: slideUp 0.5s ease-out;
+    margin: 60px auto;
 }
 
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.failed-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
 }
 
 .failed-header {
     background: linear-gradient(135deg, #ff6f91 0%, #ff3f6f 100%);
-    padding: 40px 30px;
+    padding: 50px 30px;
     text-align: center;
     color: white;
 }
@@ -44,161 +32,218 @@ body {
 .failed-icon {
     width: 100px;
     height: 100px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.25);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 20px;
+    animation: scaleIn 0.6s ease-out;
+}
+
+@keyframes scaleIn {
+    from { 
+        transform: scale(0);
+        opacity: 0;
+    }
+    to { 
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.failed-icon-x {
     font-size: 60px;
-    animation: shake 0.5s ease-out;
+    font-weight: bold;
+    animation: shake 0.5s ease-out 0.3s;
 }
 
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-    20%, 40%, 60%, 80% { transform: translateX(5px); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
 }
 
-.failed-header h2 {
-    font-size: 32px;
+.failed-header h1 {
+    font-size: 28px;
     font-weight: 700;
     margin: 0 0 10px 0;
-    color: white;
 }
 
 .failed-header p {
-    font-size: 16px;
+    font-size: 15px;
     margin: 0;
     opacity: 0.95;
 }
 
-.failed-body {
+.failed-content {
     padding: 40px 30px;
     text-align: center;
 }
 
 .status-badge {
     display: inline-block;
-    padding: 10px 24px;
-    background: #fff0f5;
-    color: #ff6f91;
+    background: #fff3cd;
+    color: #856404;
+    padding: 10px 20px;
     border-radius: 25px;
-    font-weight: 600;
     font-size: 14px;
-    margin-bottom: 25px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-bottom: 20px;
 }
 
-.message {
+.message-text {
     color: #666;
-    font-size: 17px;
-    line-height: 1.8;
-    margin-bottom: 35px;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 20px 0 30px 0;
     padding: 0 20px;
 }
 
-.error-details {
+.help-box {
     background: #f8f9fa;
     border-radius: 12px;
-    padding: 20px;
+    padding: 25px;
     margin-bottom: 30px;
     text-align: left;
 }
 
-.error-details h4 {
-    color: #333;
-    margin: 0 0 15px 0;
+.help-box h3 {
     font-size: 16px;
+    color: #344055;
+    margin: 0 0 15px 0;
+    font-weight: 700;
 }
 
-.error-details p {
+.help-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.help-box li {
     color: #666;
-    margin: 5px 0;
     font-size: 14px;
-    line-height: 1.6;
+    padding: 8px 0;
+    padding-left: 25px;
+    position: relative;
+}
+
+.help-box li:before {
+    content: "•";
+    position: absolute;
+    left: 10px;
+    color: #ff6f91;
+    font-size: 18px;
 }
 
 .action-buttons {
     display: flex;
-    gap: 15px;
+    gap: 12px;
+    margin-top: 30px;
     justify-content: center;
     flex-wrap: wrap;
 }
 
 .btn {
     padding: 14px 32px;
-    border: none;
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
+    border-radius: 8px;
     text-decoration: none;
-    display: inline-block;
-    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #ff6f91 0%, #ff3f6f 100%);
-    color: #fff;
-    box-shadow: 0 4px 15px rgba(255, 111, 145, 0.3);
+    background: #ff6f91;
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 111, 145, 0.3);
 }
 
 .btn-primary:hover {
+    background: #ff3f6f;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 111, 145, 0.4);
-    color: #fff;
+    box-shadow: 0 6px 16px rgba(255, 111, 145, 0.4);
 }
 
 .btn-secondary {
-    background: #f0f0f0;
-    color: #333;
+    background: transparent;
+    color: #ff6f91;
+    border: 2px solid #ff6f91;
 }
 
 .btn-secondary:hover {
-    background: #e0e0e0;
-    transform: translateY(-2px);
-    color: #333;
+    background: #fff5f8;
 }
 
-.help-text {
-    margin-top: 30px;
-    padding-top: 30px;
-    border-top: 1px solid #e0e0e0;
-    color: #888;
-    font-size: 14px;
+@media (max-width: 768px) {
+    .failed-container {
+        margin: 30px auto;
+        width: 95%;
+    }
+    
+    .failed-header {
+        padding: 40px 20px;
+    }
+    
+    .failed-content {
+        padding: 30px 20px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
 }
 </style>
 
-<div class="failed-wrapper">
-    <div class="payment-failed-container">
+<div class="failed-container">
+    <div class="failed-card">
         <div class="failed-header">
-            <div class="failed-icon">❌</div>
-            <h2>Payment Failed</h2>
+            <div class="failed-icon">
+                <div class="failed-icon-x">✕</div>
+            </div>
+            <h1>Payment Failed</h1>
             <p>We couldn't process your payment</p>
         </div>
-        
-        <div class="failed-body">
+
+        <div class="failed-content">
             {% if status %}
             <div class="status-badge">{{ status }}</div>
             {% endif %}
             
-            <p class="message">
-                {{ message|default:"Your payment could not be completed. This could be due to insufficient funds, incorrect payment details, or a network issue. Please check your payment method and try again." }}
+            <p class="message-text">
+                {{ message|default:"Your payment could not be completed. This could be due to insufficient funds, incorrect payment details, or a network issue." }}
             </p>
-            
-            <div class="error-details">
-                <h4>💡 What you can do:</h4>
-                <p>✓ Check your payment method details</p>
-                <p>✓ Ensure you have sufficient balance</p>
-                <p>✓ Try a different payment method</p>
-                <p>✓ Contact your bank if the issue persists</p>
+
+            <div class="help-box">
+                <h3>What you can do:</h3>
+                <ul>
+                    <li>Check your payment method details</li>
+                    <li>Ensure you have sufficient balance</li>
+                    <li>Try a different payment method</li>
+                    <li>Contact your bank if the issue persists</li>
+                </ul>
             </div>
-            
+
             <div class="action-buttons">
-                <a href="{% url 'checkout' %}" class="btn btn-primary">Try Again</a>
-                <a href="{% url 'shop_home' %}" class="btn btn-secondary">Continue Shopping</a>
+                <a href="{% url 'checkout' %}" class="btn btn-primary">
+                    Try Again
+                </a>
+                <a href="{% url 'shop_home' %}" class="btn btn-secondary">
+                    Continue Shopping
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 

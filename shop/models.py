@@ -137,6 +137,7 @@ class OrderItem(models.Model):
     size = models.CharField(max_length=10, blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
+    @property
     def subtotal(self):
         return self.price * self.quantity
 

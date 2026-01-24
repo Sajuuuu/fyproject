@@ -1,44 +1,30 @@
 {% extends 'base.html' %}
-{% block title %}Order Success - Pethood{% endblock %}
 {% load static %}
+{% block title %}Order Success - Pethood{% endblock %}
 {% block content %}
 
 <style>
 body {
-    background: linear-gradient(135deg, #fff9f0 0%, #ffe6f0 100%);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #333;
-    min-height: 100vh;
-}
-
-.success-wrapper {
-    padding: 60px 20px;
+    background-color: #fff9f0;
+    font-family: 'Arial', sans-serif;
 }
 
 .success-container {
-    max-width: 700px;
-    margin: 0 auto;
-    background: #fff;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(255, 111, 145, 0.15);
-    overflow: hidden;
-    animation: slideUp 0.5s ease-out;
+    width: 90%;
+    max-width: 600px;
+    margin: 60px auto;
 }
 
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.success-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
 }
 
 .success-header {
     background: linear-gradient(135deg, #ff6f91 0%, #ff3f6f 100%);
-    padding: 40px 30px;
+    padding: 50px 30px;
     text-align: center;
     color: white;
 }
@@ -46,343 +32,225 @@ body {
 .success-icon {
     width: 100px;
     height: 100px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.25);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 20px;
-    animation: scaleIn 0.5s ease-out 0.2s both;
+    animation: scaleIn 0.6s ease-out;
 }
 
 @keyframes scaleIn {
-    from {
+    from { 
         transform: scale(0);
+        opacity: 0;
     }
-    to {
+    to { 
         transform: scale(1);
+        opacity: 1;
     }
 }
 
 .checkmark {
-    width: 60px;
-    height: 60px;
-    border: 4px solid white;
-    border-radius: 50%;
-    position: relative;
+    font-size: 60px;
+    animation: checkIn 0.8s ease-out 0.3s both;
 }
 
-.checkmark::after {
-    content: '';
-    position: absolute;
-    left: 18px;
-    top: 8px;
-    width: 16px;
-    height: 28px;
-    border: solid white;
-    border-width: 0 4px 4px 0;
-    transform: rotate(45deg);
+@keyframes checkIn {
+    from { 
+        transform: scale(0) rotate(0deg);
+    }
+    to { 
+        transform: scale(1) rotate(360deg);
+    }
 }
 
 .success-header h1 {
-    font-size: 36px;
+    font-size: 28px;
     font-weight: 700;
     margin: 0 0 10px 0;
-    letter-spacing: -0.5px;
 }
 
 .success-header p {
-    font-size: 18px;
+    font-size: 15px;
     margin: 0;
     opacity: 0.95;
 }
 
-.success-body {
+.order-content {
     padding: 40px 30px;
-}
-
-.order-info {
-    background: #f8f9fa;
-    border-radius: 12px;
-    padding: 25px;
-    margin-bottom: 25px;
-}
-
-.order-number {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.order-number span {
-    font-size: 14px;
-    color: #666;
-}
-
-.order-number strong {
-    font-size: 20px;
-    color: #ff6f91;
-    font-weight: 700;
-    letter-spacing: 1px;
-}
-
-.info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
-}
-
-.info-item {
     text-align: center;
 }
 
-.info-label {
-    font-size: 12px;
-    color: #888;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
-    font-weight: 600;
-}
-
-.info-value {
-    font-size: 18px;
-    color: #333;
-    font-weight: 600;
-}
-
-.order-items {
-    background: #f8f9fa;
+.order-info {
+    background: #fff5f8;
     border-radius: 12px;
     padding: 25px;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 }
 
-.order-items h3 {
-    color: #333;
-    margin: 0 0 20px 0;
-    font-size: 18px;
-    font-weight: 600;
-}
-
-.item-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 0;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.item-row:last-child {
-    border-bottom: none;
-}
-
-.item-info {
-    flex: 1;
-}
-
-.item-name {
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 5px;
-}
-
-.item-meta {
+.order-number {
     font-size: 14px;
     color: #666;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.item-price {
-    font-weight: 700;
+.order-number-value {
+    font-size: 28px;
     color: #ff6f91;
-    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 20px;
 }
 
 .order-total {
-    background: linear-gradient(135deg, #ff6f91 0%, #ff3f6f 100%);
-    color: white;
-    border-radius: 12px;
-    padding: 20px 25px;
-    margin-bottom: 25px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    border-top: 2px solid #ffe6f0;
+    padding-top: 20px;
+    margin-top: 20px;
 }
 
-.order-total span {
+.order-total-label {
     font-size: 16px;
-    opacity: 0.95;
-}
-
-.order-total strong {
-    font-size: 28px;
-    font-weight: 700;
-}
-
-.delivery-info {
-    background: #fff9f0;
-    border-left: 4px solid #ff6f91;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 25px;
-}
-
-.delivery-info h4 {
-    color: #ff6f91;
-    margin: 0 0 10px 0;
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.delivery-info p {
-    margin: 5px 0;
     color: #666;
-    line-height: 1.6;
+    margin-bottom: 8px;
 }
 
-.btn-group {
+.order-total-value {
+    font-size: 32px;
+    color: #344055;
+    font-weight: 800;
+}
+
+.payment-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #d4edda;
+    color: #155724;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 20px 0;
+}
+
+.info-text {
+    color: #666;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 20px 0;
+}
+
+.action-buttons {
     display: flex;
-    gap: 15px;
+    gap: 12px;
+    margin-top: 30px;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .btn {
     padding: 14px 32px;
-    border-radius: 30px;
+    border-radius: 8px;
     text-decoration: none;
     font-weight: 600;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-    display: inline-block;
+    font-size: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #ff6f91 0%, #ff3f6f 100%);
-    color: #fff;
-    box-shadow: 0 4px 15px rgba(255, 111, 145, 0.3);
+    background: #ff6f91;
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 111, 145, 0.3);
 }
 
 .btn-primary:hover {
+    background: #ff3f6f;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 111, 145, 0.4);
-    color: #fff;
+    box-shadow: 0 6px 16px rgba(255, 111, 145, 0.4);
 }
 
 .btn-secondary {
-    background: #fff;
-    color: #ff6f91;
-    border-color: #ff6f91;
-}
-
-.btn-secondary:hover {
-    background: #fff5f8;
-    transform: translateY(-2px);
-    color: #ff6f91;
-}
-
-.btn-secondary {
-    background-color: #fff;
+    background: transparent;
     color: #ff6f91;
     border: 2px solid #ff6f91;
 }
 
 .btn-secondary:hover {
-    background-color: #ff6f91;
-    color: #fff;
+    background: #fff5f8;
 }
 
-@media screen and (max-width: 480px) {
+@media (max-width: 768px) {
     .success-container {
-        margin: 40px 15px;
+        margin: 30px auto;
+        width: 95%;
+    }
+    
+    .success-header {
+        padding: 40px 20px;
+    }
+    
+    .order-content {
         padding: 30px 20px;
     }
-
-    .success-container h1 {
-        font-size: 24px;
-    }
-
-    .btn-group {
+    
+    .action-buttons {
         flex-direction: column;
     }
-
+    
     .btn {
         width: 100%;
+        justify-content: center;
     }
 }
 </style>
 
-<div class="success-wrapper">
-    <div class="success-container">
+<div class="success-container">
+    <div class="success-card">
         <div class="success-header">
             <div class="success-icon">
-                <div class="checkmark"></div>
+                <div class="checkmark">✓</div>
             </div>
             <h1>Order Placed Successfully!</h1>
-            <p>Thank you for shopping with Pethood</p>
+            <p>Your order has been received and is being processed</p>
         </div>
-        
-        <div class="success-body">
-            {% if order %}
+
+        <div class="order-content">
             <div class="order-info">
-                <div class="order-number">
-                    <span>Order Number:</span>
-                    <strong>{{ order.order_number }}</strong>
-                </div>
+                <div class="order-number">Order Number</div>
+                <div class="order-number-value">#{{ order.order_number }}</div>
                 
-                <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-label">Payment Method</div>
-                        <div class="info-value">{{ order.get_payment_method_display }}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Order Status</div>
-                        <div class="info-value" style="color: #4caf50;">{{ order.get_status_display }}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Order Date</div>
-                        <div class="info-value">{{ order.created_at|date:"M d, Y" }}</div>
-                    </div>
+                {% if order.payment_method == 'khalti' and order.payment_verified %}
+                <div class="payment-badge">
+                    <i class="fas fa-check-circle"></i> Payment Confirmed
+                </div>
+                {% endif %}
+                
+                <div class="order-total">
+                    <div class="order-total-label">Total Amount</div>
+                    <div class="order-total-value">रु{{ order.total_amount }}</div>
                 </div>
             </div>
-            
-            <div class="order-items">
-                <h3>Ordered Items</h3>
-                {% for item in order.items.all %}
-                <div class="item-row">
-                    <div class="item-info">
-                        <div class="item-name">{{ item.product.name }}</div>
-                        <div class="item-meta">
-                            Qty: {{ item.quantity }}
-                            {% if item.size %} | Size: {{ item.size }}{% endif %}
-                        </div>
-                    </div>
-                    <div class="item-price">रु{{ item.subtotal }}</div>
-                </div>
-                {% endfor %}
-            </div>
-            
-            <div class="order-total">
-                <span>Total Amount</span>
-                <strong>रु{{ order.total_amount }}</strong>
-            </div>
-            
-            <div class="delivery-info">
-                <h4>Delivery Address</h4>
-                <p><strong>{{ order.first_name }} {{ order.last_name }}</strong></p>
-                <p>{{ order.address }}</p>
-                <p>{{ order.city }}{% if order.postal_code %}, {{ order.postal_code }}{% endif %}</p>
-                <p>Phone: {{ order.phone }}</p>
-                <p>Email: {{ order.email }}</p>
-            </div>
-            {% endif %}
-            
-            <div class="btn-group">
-                <a href="{% url 'profile' %}" class="btn btn-primary">View Orders</a>
-                <a href="{% url 'shop_home' %}" class="btn btn-secondary">Continue Shopping</a>
+
+            <p class="info-text">
+                We've sent a confirmation email to <strong>{{ order.email }}</strong><br>
+                You'll receive updates about your order status.
+            </p>
+
+            <div class="action-buttons">
+                <a href="{% url 'order_detail' order.id %}" class="btn btn-primary">
+                    <i class="fas fa-receipt"></i> View Full Details
+                </a>
+                <a href="{% url 'shop_home' %}" class="btn btn-secondary">
+                    <i class="fas fa-shopping-bag"></i> Continue Shopping
+                </a>
             </div>
         </div>
     </div>
