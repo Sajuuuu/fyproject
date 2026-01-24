@@ -1151,7 +1151,7 @@ h2 span {
                 <div class="listing-meta">
                     <span><i class="fas fa-paw"></i> {{ dog.breed }}</span>
                     <span><i class="fas fa-venus-mars"></i> {{ dog.get_gender_display }}</span>
-                    <span><i class="fas fa-calendar"></i> {{ dog.age }} old</span>
+                    <span><i class="fas fa-calendar"></i> {{ dog.get_age_display }} old</span>
                 </div>
                 <div>
                     {% if dog.is_adopted %}

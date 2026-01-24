@@ -14,7 +14,7 @@ class Dog(models.Model):
     slug = models.SlugField(max_length=150, unique=True, blank=True)
     breed = models.CharField(max_length=100)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default='male')
-    age = models.CharField(max_length=50)  # e.g., "2 years", "6 months"
+    age = models.IntegerField(help_text="Age in months")
     behaviour = models.CharField(max_length=200, help_text="e.g., Friendly, Energetic, Calm, Playful")
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2, help_text="Adoption fee", default=0)
@@ -39,6 +39,23 @@ class Dog(models.Model):
                 counter += 1
             self.slug = slug
         super().save(*args, **kwargs)
+    
+    def get_age_display(self):
+        """Convert months to human-readable format"""
+        try:
+            age_int = int(self.age) if isinstance(self.age, str) else self.age
+        except (ValueError, TypeError):
+            return str(self.age)  # Return as-is if conversion fails
+        
+        if age_int < 12:
+            return f"{age_int} month{'s' if age_int != 1 else ''}"
+        else:
+            years = age_int // 12
+            months = age_int % 12
+            if months == 0:
+                return f"{years} year{'s' if years != 1 else ''}"
+            else:
+                return f"{years} year{'s' if years != 1 else ''}, {months} month{'s' if months != 1 else ''}"
 
     def __str__(self):
         return f"{self.name} - {self.breed}"

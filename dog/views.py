@@ -9,11 +9,47 @@ from userauth.models import Address
 # Create your views here.
 
 def dog_list(request):
-    """Display all approved dogs available for adoption (no login required)"""
+    """Display all approved dogs available for adoption with filters"""
     dogs = Dog.objects.filter(is_adopted=False, is_approved=True)
+    
+    # Get filter parameters
+    gender = request.GET.get('gender', '')
+    age_sort = request.GET.get('age_sort', '')
+    breed = request.GET.get('breed', '')
+    location = request.GET.get('location', '')
+    
+    # Apply filters
+    if gender:
+        dogs = dogs.filter(gender=gender)
+    
+    if breed:
+        dogs = dogs.filter(breed__icontains=breed)
+    
+    if location:
+        dogs = dogs.filter(location__icontains=location)
+    
+    # Apply age sorting
+    if age_sort == 'young':
+        dogs = dogs.order_by('age')
+    elif age_sort == 'old':
+        dogs = dogs.order_by('-age')
+    else:
+        dogs = dogs.order_by('-created_at')  # Default: newest first
+    
+    # Get unique breeds and locations for filter dropdowns
+    all_breeds = Dog.objects.filter(is_approved=True).values_list('breed', flat=True).distinct()
+    all_locations = Dog.objects.filter(is_approved=True).exclude(location='').values_list('location', flat=True).distinct()
+    
     context = {
         'dogs': dogs,
-        'total_dogs': dogs.count()
+        'total_dogs': dogs.count(),
+        'selected_gender': gender,
+        'selected_age_sort': age_sort,
+        'selected_breed': breed,
+        'selected_location': location,
+        'all_breeds': sorted(set(all_breeds)),
+        'all_locations': sorted(set(all_locations)),
+        'gender_choices': Dog.GENDER_CHOICES,
     }
     return render(request, 'dog_list.html', context)
 
