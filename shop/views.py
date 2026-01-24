@@ -644,9 +644,6 @@ def khalti_callback(request):
                 # Get billing info from session
                 billing = request.session.get('khalti_billing', {})
                 
-                # Send order confirmation email
-                send_order_confirmation_email(order)
-                
                 # Get cart items
                 cart = Cart.objects.get(user=request.user)
                 buy_now_item_id = request.session.get('buy_now_item_id')
@@ -687,6 +684,9 @@ def khalti_callback(request):
                         size=item.size,
                         price=item.product.price
                     )
+                
+                # Send order confirmation email
+                send_order_confirmation_email(order)
                 
                 # Save address if needed
                 saved_address_id = billing.get('saved_address_id')
