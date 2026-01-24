@@ -4,6 +4,12 @@
 {% block content %}
 
 <style>
+/* Page background - butter yellow like shop */
+body {
+    background: #fffbea;
+    font-family: Arial, sans-serif;
+}
+
 .dog-detail-container {
     max-width: 1100px;
     margin: 40px auto;
@@ -14,11 +20,12 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: #666;
+    color: #5a3e00;
     text-decoration: none;
     margin-bottom: 20px;
     font-size: 16px;
     transition: color 0.3s;
+    font-weight: 600;
 }
 
 .back-link:hover {
@@ -29,7 +36,8 @@
     background: white;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    border: 2px solid #f5d76e;
 }
 
 .dog-detail-grid {
@@ -41,12 +49,13 @@
 .dog-detail-image {
     width: 100%;
     height: 600px;
-    object-fit: cover;
-    background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+    object-fit: contain;
+    background: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 150px;
+    padding: 30px;
 }
 
 .dog-detail-content {
@@ -59,19 +68,22 @@
 .dog-status {
     display: inline-block;
     padding: 8px 16px;
-    background: #2ecc71;
-    color: white;
+    background: #fff7d1;
+    color: #5a3e00;
     border-radius: 20px;
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 15px;
+    border: 2px solid #f5d76e;
 }
 
 .dog-detail-name {
     font-size: 42px;
     font-weight: bold;
-    color: #333;
+    color: #000;
     margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .dog-detail-breed {
@@ -89,6 +101,7 @@
     padding: 20px;
     background: #f8f9fa;
     border-radius: 12px;
+    border: 2px solid #e0e0e0;
 }
 
 .info-item {
@@ -98,24 +111,27 @@
 
 .info-label {
     font-size: 13px;
-    color: #666;
+    color: #5a3e00;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 5px;
+    font-weight: 600;
 }
 
 .info-value {
     font-size: 18px;
     font-weight: 600;
-    color: #333;
+    color: #000;
 }
 
 .section-title {
     font-size: 20px;
     font-weight: bold;
-    color: #333;
+    color: #000;
     margin-bottom: 15px;
     margin-top: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .dog-description {
@@ -125,26 +141,16 @@
     margin-bottom: 25px;
 }
 
-.dog-story {
-    font-size: 16px;
-    line-height: 1.8;
-    color: #555;
-    background: #fff9e6;
-    padding: 20px;
-    border-radius: 12px;
-    border-left: 4px solid #ffcc00;
-    margin-bottom: 30px;
-}
-
 .adoption-price {
     font-size: 32px;
     font-weight: bold;
-    color: #2ecc71;
+    color: #ff6f91;
     text-align: center;
     padding: 20px;
-    background: #f0f9f4;
+    background: #fff7d1;
     border-radius: 12px;
     margin-bottom: 20px;
+    border: 2px solid #f5d76e;
 }
 
 .adoption-cta {
@@ -171,7 +177,7 @@
 }
 
 .btn-adopt:hover {
-    background: #ff5577;
+    background: #ff4d7a;
     transform: translateY(-2px);
 }
 
@@ -213,7 +219,59 @@
         flex-direction: column;
     }
 }
+
+.image-gallery-container {
+    background: #fff;
+}
+
+.main-image-wrapper {
+    width: 100%;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.main-image-wrapper img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.thumbnail-strip {
+    display: flex;
+    gap: 10px;
+    padding: 10px 20px 20px;
+    overflow-x: auto;
+    background: #f8f9fa;
+}
+
+.thumbnail {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid #e0e0e0;
+    transition: all 0.3s;
+    flex-shrink: 0;
+}
+
+.thumbnail:hover,
+.thumbnail.active {
+    border-color: #ff6f91;
+    transform: scale(1.05);
+}
 </style>
+
+<script>
+function changeImage(src, element) {
+    document.getElementById('mainImage').src = src;
+    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+    element.classList.add('active');
+}
+</script>
 
 <div class="dog-detail-container">
     <a href="{% url 'dog:dog_list' %}" class="back-link">
@@ -222,66 +280,103 @@
 
     <div class="dog-detail-card">
         <div class="dog-detail-grid">
-            <div>
-                {% if dog.image %}
-                <img src="{{ dog.image.url }}" alt="{{ dog.name }}" class="dog-detail-image">
+            <div class="image-gallery-container">
+                {% if dog.image or dog.images.exists %}
+                <div class="main-image-wrapper">
+                    {% if dog.image %}
+                    <img id="mainImage" src="{{ dog.image.url }}" alt="{{ dog.name }}">
+                    {% elif dog.images.first %}
+                    <img id="mainImage" src="{{ dog.images.first.image.url }}" alt="{{ dog.name }}">
+                    {% endif %}
+                </div>
+                
+                {% if dog.images.exists or dog.image %}
+                <div class="thumbnail-strip">
+                    {% if dog.image %}
+                    <img src="{{ dog.image.url }}" alt="{{ dog.name }}" class="thumbnail active" onclick="changeImage('{{ dog.image.url }}', this)">
+                    {% endif %}
+                    {% for img in dog.images.all %}
+                    <img src="{{ img.image.url }}" alt="{{ dog.name }}" class="thumbnail {% if not dog.image and forloop.first %}active{% endif %}" onclick="changeImage('{{ img.image.url }}', this)">
+                    {% endfor %}
+                </div>
+                {% endif %}
                 {% else %}
-                <div class="dog-detail-image">🐕</div>
+                <div class="dog-detail-image"></div>
                 {% endif %}
             </div>
             
             <div class="dog-detail-content">
-                <span class="dog-status">
-                    {% if dog.is_adopted %}
-                    ❤️ Adopted
-                    {% else %}
-                    ✨ Available for Adoption
-                    {% endif %}
-                </span>
-                
                 <h1 class="dog-detail-name">{{ dog.name }}</h1>
                 <div class="dog-detail-breed">{{ dog.breed }}</div>
                 
                 <div class="dog-quick-info">
                     <div class="info-item">
+                        <span class="info-label">Gender</span>
+                        <span class="info-value">{{ dog.get_gender_display }}</span>
+                    </div>
+                    <div class="info-item">
                         <span class="info-label">Age</span>
                         <span class="info-value">{{ dog.age }}</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Adoption Fee</span>
-                        <span class="info-value">रु{{ dog.price }}</span>
+                        <span class="info-label">Behaviour</span>
+                        <span class="info-value">{{ dog.behaviour }}</span>
                     </div>
+                    <div class="info-item">
+                        <span class="info-label">Price</span>
+                        <span class="info-value" style="color: #ff6f91;">रु{{ dog.price|floatformat:0 }}</span>
+                    </div>
+                    {% if dog.location %}
+                    <div class="info-item">
+                        <span class="info-label">Location</span>
+                        <span class="info-value">{{ dog.location }}</span>
+                    </div>
+                    {% endif %}
                 </div>
                 
                 <h3 class="section-title">About {{ dog.name }}</h3>
                 <p class="dog-description">{{ dog.description }}</p>
-                
-                <h3 class="section-title">{{ dog.name }}'s Story</h3>
-                <div class="dog-story">
-                    {{ dog.story }}
+            </div>
+        </div>
+        
+        <!-- Contact Lister Section - Full Width Below Images -->
+        {% if dog.lister %}
+        <div style="padding: 30px 50px 40px; background: white;">
+            <h3 class="section-title" style="margin-top: 0; text-align: center; font-size: 24px; margin-bottom: 25px;">Contact Lister</h3>
+            <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; max-width: 800px; margin: 0 auto;">
+                <div style="text-align: center; min-width: 200px;">
+                    <div style="width: 60px; height: 60px; background: #f8f9fa; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; border: 2px solid #e0e0e0;">
+                        <i class="fas fa-user" style="font-size: 24px; color: #ff6f91;"></i>
+                    </div>
+                    {% if dog.lister.first_name and dog.lister.last_name %}
+                    <p style="margin: 0; color: #5a3e00; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 8px;">Name</p>
+                    <p style="margin: 0; font-size: 18px; color: #000; font-weight: 600;">{{ dog.lister.first_name }} {{ dog.lister.last_name }}</p>
+                    {% else %}
+                    <p style="margin: 0; color: #5a3e00; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 8px;">Username</p>
+                    <p style="margin: 0; font-size: 18px; color: #000; font-weight: 600;">{{ dog.lister.username }}</p>
+                    {% endif %}
                 </div>
                 
-                {% if not dog.is_adopted %}
-                <div class="adoption-price">
-                    Adoption Fee: रु{{ dog.price }}
+                <div style="text-align: center; min-width: 200px;">
+                    <div style="width: 60px; height: 60px; background: #f8f9fa; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; border: 2px solid #e0e0e0;">
+                        <i class="fas fa-envelope" style="font-size: 24px; color: #ff6f91;"></i>
+                    </div>
+                    <p style="margin: 0; color: #5a3e00; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 8px;">Email</p>
+                    <a href="mailto:{{ dog.lister.email }}" style="color: #ff6f91; text-decoration: none; font-size: 16px; font-weight: 600; display: block; word-break: break-all;">{{ dog.lister.email }}</a>
                 </div>
                 
-                <div class="adoption-cta">
-                    <button class="btn-adopt" onclick="alert('Please contact us to start the adoption process!')">
-                        Adopt {{ dog.name }}
-                    </button>
-                    <a href="{% url 'profile' %}" class="btn-contact">
-                        Contact Us
-                    </a>
-                </div>
-                {% else %}
-                <div style="text-align: center; padding: 20px; background: #ffe6e6; border-radius: 12px; color: #cc0000;">
-                    <strong>{{ dog.name }} has been adopted!</strong>
+                {% if lister_phone %}
+                <div style="text-align: center; min-width: 200px;">
+                    <div style="width: 60px; height: 60px; background: #f8f9fa; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; border: 2px solid #e0e0e0;">
+                        <i class="fas fa-phone" style="font-size: 24px; color: #ff6f91;"></i>
+                    </div>
+                    <p style="margin: 0; color: #5a3e00; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 8px;">Phone</p>
+                    <a href="tel:{{ lister_phone }}" style="color: #ff6f91; text-decoration: none; font-size: 18px; font-weight: 600;">{{ lister_phone }}</a>
                 </div>
                 {% endif %}
             </div>
         </div>
+        {% endif %}
     </div>
 </div>
-
 {% endblock %}

@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  .terms-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 40px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .terms-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .terms-header h1 {
+    color: #ff6f91;
+    font-size: 32px;
+    margin-bottom: 10px;
+  }
+  
+  .terms-header .last-updated {
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .terms-section {
+    margin-bottom: 30px;
+  }
+  
+  .terms-section h2 {
+    color: #344055;
+    font-size: 22px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #ff6f91;
+    padding-bottom: 8px;
+  }
+  
+  .terms-section p, .terms-section ul {
+    color: #555;
+    line-height: 1.8;
+    font-size: 15px;
+  }
+  
+  .terms-section ul {
+    padding-left: 30px;
+    margin: 15px 0;
+  }
+  
+  .terms-section li {
+    margin-bottom: 10px;
+  }
+  
+  .terms-contact {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 40px;
+  }
+  
+  .terms-contact h3 {
+    color: #ff6f91;
+    margin-bottom: 10px;
+  }
+  
+  .terms-contact p {
+    color: #666;
+    margin: 5px 0;
+  }
+</style>
+
+<div class="terms-container">
+  <div class="terms-header">
+    <h1>Terms of Use</h1>
+    <p class="last-updated">Last Updated: January 24, 2026</p>
+  </div>
+  
+  <div class="terms-section">
+    <h2>1. Acceptance of Terms</h2>
+    <p>By accessing and using Pethood's website and services, you accept and agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use our services.</p>
+  </div>
+  
+  <div class="terms-section">
+    <h2>2. Services Description</h2>
+    <p>Pethood provides two main services:</p>
+    <ul>
+      <li><strong>E-commerce Platform:</strong> Online shop for pet products including food, accessories, and supplies.</li>
+      <li><strong>Dog Adoption Platform:</strong> A service connecting dog owners with potential adopters. All listings are subject to admin approval.</li>
+    </ul>
+  </div>
+  
+  <div class="terms-section">
+    <h2>3. User Accounts</h2>
+    <p>To use certain features, you must create an account. You are responsible for:</p>
+    <ul>
+      <li>Providing accurate and complete information</li>
+      <li>Maintaining the confidentiality of your account credentials</li>
+      <li>All activities that occur under your account</li>
+      <li>Notifying us immediately of any unauthorized access</li>
+    </ul>
+  </div>
+  
+  <div class="terms-section">
+    <h2>4. Dog Listing Requirements</h2>
+    <p>When listing a dog for adoption, you must:</p>
+    <ul>
+      <li>Provide a valid default address with phone number</li>
+      <li>Provide accurate information about the dog (breed, age, behavior, health status)</li>
+      <li>Upload clear, genuine photos of the dog</li>
+      <li>Have legal authority to list the dog for adoption</li>
+      <li>Wait for admin approval before your listing becomes public</li>
+      <li>Respond to adoption inquiries in a timely manner</li>
+    </ul>
+    <p><strong>Prohibited:</strong> Listing dogs for sale (commercial breeding), misrepresenting dog information, or listing dogs you don't have legal authority over.</p>
+  </div>
+  
+  <div class="terms-section">
+    <h2>5. Shopping and Payments</h2>
+    <ul>
+      <li><strong>Pricing:</strong> All prices are displayed in Nepalese Rupees and are subject to change without notice.</li>
+      <li><strong>Payment:</strong> We accept payments through Khalti. By making a purchase, you agree to provide valid payment information.</li>
+      <li><strong>Order Fulfillment:</strong> We will make reasonable efforts to deliver products within the estimated timeframe.</li>
+      <li><strong>Refunds:</strong> Refund policies are subject to individual product terms and conditions.</li>
+    </ul>
+  </div>
+  
+  <div class="terms-section">
+    <h2>6. User Conduct</h2>
+    <p>You agree not to:</p>
+    <ul>
+      <li>Use the platform for any illegal or unauthorized purpose</li>
+      <li>Post false, misleading, or fraudulent information</li>
+      <li>Harass, abuse, or harm other users</li>
+      <li>Attempt to gain unauthorized access to our systems</li>
+      <li>Upload viruses or malicious code</li>
+      <li>Scrape or copy content without permission</li>
+      <li>Use the platform for commercial dog breeding or sales</li>
+    </ul>
+  </div>
+  
+  <div class="terms-section">
+    <h2>7. Content Ownership</h2>
+    <p>You retain ownership of content you post (photos, descriptions). By posting, you grant Pethood a license to use, display, and distribute this content on our platform. We reserve the right to remove any content that violates these terms.</p>
+  </div>
+  
+  <div class="terms-section">
+    <h2>8. Admin Rights</h2>
+    <p>Pethood administrators reserve the right to:</p>
+    <ul>
+      <li>Approve or reject dog listings at their discretion</li>
+      <li>Remove listings that violate our policies</li>
+      <li>Suspend or terminate user accounts for violations</li>
+      <li>Modify or discontinue services without prior notice</li>
+    </ul>
+  </div>
+  
+  <div class="terms-section">
+    <h2>9. Liability Disclaimer</h2>
+    <p>Pethood acts as a platform connecting users. We are not responsible for:</p>
+    <ul>
+      <li>The condition, health, or behavior of dogs listed for adoption</li>
+      <li>Disputes between listers and adopters</li>
+      <li>Product quality issues (we facilitate sales but are not the manufacturer)</li>
+      <li>Loss or damage resulting from use of our services</li>
+    </ul>
+    <p>Our services are provided "as is" without warranties of any kind.</p>
+  </div>
+  
+  <div class="terms-section">
+    <h2>10. Indemnification</h2>
+    <p>You agree to indemnify and hold Pethood harmless from any claims, damages, or expenses arising from your use of our services or violation of these terms.</p>
+  </div>
+  
+  <div class="terms-section">
+    <h2>11. Termination</h2>
+    <p>We reserve the right to terminate or suspend your account at any time for violations of these terms. Upon termination, your right to use our services ceases immediately.</p>
+  </div>
+  
+  <div class="terms-section">
+    <h2>12. Changes to Terms</h2>
+    <p>We may update these Terms of Use from time to time. Continued use of our services after changes constitutes acceptance of the modified terms.</p>
+  </div>
+  
+  <div class="terms-section">
+    <h2>13. Governing Law</h2>
+    <p>These terms are governed by the laws of Nepal. Any disputes shall be resolved in the courts of Kathmandu, Nepal.</p>
+  </div>
+  
+  <div class="terms-contact">
+    <h3>Contact Us</h3>
+    <p>If you have questions about these Terms of Use, please contact us:</p>
+    <p><i class="fas fa-envelope" style="color: #ff6f91; margin-right: 8px;"></i>info@pethood.com</p>
+    <p><i class="fas fa-phone" style="color: #ff6f91; margin-right: 8px;"></i>+977 123-4567</p>
+    <p><i class="fas fa-map-marker-alt" style="color: #ff6f91; margin-right: 8px;"></i>Kathmandu, Nepal</p>
+  </div>
+</div>
+{% endblock %}

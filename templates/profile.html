@@ -570,8 +570,21 @@ h2 span {
 
     <!-- User Information -->
     <div class="section">
-        <h3>Account Information</h3>
+        <h3>
+            <span>Account Information</span>
+            <button class="btn btn-edit" onclick="openAccountModal()">
+                Edit
+            </button>
+        </h3>
         <div class="user-info">
+            <div class="info-item">
+                <label>First Name</label>
+                <span>{{ user.first_name|default:"Not set" }}</span>
+            </div>
+            <div class="info-item">
+                <label>Last Name</label>
+                <span>{{ user.last_name|default:"Not set" }}</span>
+            </div>
             <div class="info-item">
                 <label>Username</label>
                 <span>{{ user.username }}</span>
@@ -748,6 +761,31 @@ h2 span {
 </div>
 
 <!-- Edit Address Modal -->
+<div id="accountModal" class="modal">
+    <div class="modal-content">
+        <h4>Edit Account Information</h4>
+        <form method="post" action="{% url 'update_account' %}">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="account_first_name">First Name *</label>
+                <input type="text" id="account_first_name" name="first_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="account_last_name">Last Name *</label>
+                <input type="text" id="account_last_name" name="last_name" required>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn btn-cancel" onclick="closeAccountModal()">Cancel</button>
+                <button type="submit" class="btn btn-edit">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Address Modal -->
 <div id="editModal" class="modal">
     <div class="modal-content">
         <h4>Edit Address</h4>
@@ -823,16 +861,30 @@ function closeEditModal() {
     document.getElementById('editModal').classList.remove('active');
 }
 
+function openAccountModal() {
+    document.getElementById('account_first_name').value = '{{ user.first_name }}';
+    document.getElementById('account_last_name').value = '{{ user.last_name }}';
+    document.getElementById('accountModal').classList.add('active');
+}
+
+function closeAccountModal() {
+    document.getElementById('accountModal').classList.remove('active');
+}
+
 // Close modals when clicking outside
 window.onclick = function(event) {
     const addModal = document.getElementById('addModal');
     const editModal = document.getElementById('editModal');
+    const accountModal = document.getElementById('accountModal');
     
     if (event.target == addModal) {
         closeAddModal();
     }
     if (event.target == editModal) {
         closeEditModal();
+    }
+    if (event.target == accountModal) {
+        closeAccountModal();
     }
 }
 </script>

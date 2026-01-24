@@ -23,4 +23,5 @@ urlpatterns = [
     path('',include('userauth.urls')),
     path('adoption/', include('dog.urls')),
     path('',include('shop.urls')),
+    path('',include('company.urls')),
 ]

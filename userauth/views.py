@@ -152,3 +152,15 @@ def set_default_address(request, address_id):
         messages.success(request, 'Default address updated!')
     
     return redirect('profile')
+
+@login_required
+def update_account(request):
+    if request.method == 'POST':
+        request.user.first_name = request.POST.get('first_name', '')
+        request.user.last_name = request.POST.get('last_name', '')
+        request.user.save()
+        
+        messages.success(request, 'Account information updated successfully!')
+        return redirect('profile')
+    
+    return redirect('profile')

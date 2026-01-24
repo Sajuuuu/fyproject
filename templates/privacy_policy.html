@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  .policy-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 40px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .policy-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .policy-header h1 {
+    color: #ff6f91;
+    font-size: 32px;
+    margin-bottom: 10px;
+  }
+  
+  .policy-header .last-updated {
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .policy-section {
+    margin-bottom: 30px;
+  }
+  
+  .policy-section h2 {
+    color: #344055;
+    font-size: 22px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #ff6f91;
+    padding-bottom: 8px;
+  }
+  
+  .policy-section p, .policy-section ul {
+    color: #555;
+    line-height: 1.8;
+    font-size: 15px;
+  }
+  
+  .policy-section ul {
+    padding-left: 30px;
+    margin: 15px 0;
+  }
+  
+  .policy-section li {
+    margin-bottom: 10px;
+  }
+  
+  .policy-contact {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 40px;
+  }
+  
+  .policy-contact h3 {
+    color: #ff6f91;
+    margin-bottom: 10px;
+  }
+  
+  .policy-contact p {
+    color: #666;
+    margin: 5px 0;
+  }
+</style>
+
+<div class="policy-container">
+  <div class="policy-header">
+    <h1>Privacy Policy</h1>
+    <p class="last-updated">Last Updated: January 24, 2026</p>
+  </div>
+  
+  <div class="policy-section">
+    <h2>1. Information We Collect</h2>
+    <p>At Pethood, we collect information to provide better services to our users. We collect:</p>
+    <ul>
+      <li><strong>Personal Information:</strong> Name, email address, phone number, and delivery addresses when you create an account or place an order.</li>
+      <li><strong>Dog Listing Information:</strong> Details about dogs you list for adoption including photos, breed, age, and location.</li>
+      <li><strong>Transaction Information:</strong> Payment details and order history for shop purchases.</li>
+      <li><strong>Usage Data:</strong> Information about how you interact with our website, including pages visited and actions taken.</li>
+    </ul>
+  </div>
+  
+  <div class="policy-section">
+    <h2>2. How We Use Your Information</h2>
+    <p>We use the collected information for the following purposes:</p>
+    <ul>
+      <li>To process and fulfill your orders and dog adoption requests</li>
+      <li>To communicate with you about your orders, listings, and account</li>
+      <li>To send notifications about dog listing approvals and adoption inquiries</li>
+      <li>To improve our website and services based on user behavior</li>
+      <li>To prevent fraud and maintain the security of our platform</li>
+      <li>To comply with legal obligations</li>
+    </ul>
+  </div>
+  
+  <div class="policy-section">
+    <h2>3. Information Sharing</h2>
+    <p>We respect your privacy and do not sell your personal information. We may share information:</p>
+    <ul>
+      <li><strong>With Other Users:</strong> Your name and contact information are shared with potential adopters when they view dog listings you've created.</li>
+      <li><strong>With Service Providers:</strong> We work with payment processors (Khalti) and delivery services who need access to certain information to perform their services.</li>
+      <li><strong>Legal Requirements:</strong> We may disclose information if required by law or to protect our rights and users' safety.</li>
+    </ul>
+  </div>
+  
+  <div class="policy-section">
+    <h2>4. Data Security</h2>
+    <p>We implement appropriate security measures to protect your personal information from unauthorized access, alteration, or destruction. However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security.</p>
+  </div>
+  
+  <div class="policy-section">
+    <h2>5. Your Rights</h2>
+    <p>You have the right to:</p>
+    <ul>
+      <li>Access and review your personal information</li>
+      <li>Update or correct your information through your profile</li>
+      <li>Delete your account and associated data</li>
+      <li>Opt-out of marketing communications</li>
+      <li>Withdraw consent for data processing where applicable</li>
+    </ul>
+  </div>
+  
+  <div class="policy-section">
+    <h2>6. Cookies</h2>
+    <p>We use cookies and similar technologies to enhance your experience, understand usage patterns, and improve our services. You can control cookie preferences through your browser settings.</p>
+  </div>
+  
+  <div class="policy-section">
+    <h2>7. Children's Privacy</h2>
+    <p>Our services are not directed to individuals under 13 years of age. We do not knowingly collect personal information from children. If you believe we have inadvertently collected such information, please contact us immediately.</p>
+  </div>
+  
+  <div class="policy-section">
+    <h2>8. Changes to This Policy</h2>
+    <p>We may update this Privacy Policy from time to time. We will notify users of significant changes by posting a notice on our website or sending an email notification.</p>
+  </div>
+  
+  <div class="policy-contact">
+    <h3>Contact Us</h3>
+    <p>If you have questions about this Privacy Policy, please contact us:</p>
+    <p><i class="fas fa-envelope" style="color: #ff6f91; margin-right: 8px;"></i>info@pethood.com</p>
+    <p><i class="fas fa-phone" style="color: #ff6f91; margin-right: 8px;"></i>+977 123-4567</p>
+    <p><i class="fas fa-map-marker-alt" style="color: #ff6f91; margin-right: 8px;"></i>Kathmandu, Nepal</p>
+  </div>
+</div>
+{% endblock %}

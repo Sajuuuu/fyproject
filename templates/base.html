@@ -29,7 +29,7 @@
       <a href="{% url 'shop_home' %}">COLLECTION</a>
       <a href="#">ABOUT US</a>
       <a href="{% url 'dog:dog_list' %}">OUR DOGS</a>
-      <a href="#">MY ADOPTION</a>
+      <a href="{% url 'dog:add_dog_listing' %}">LIST A DOG</a>
       <a href="#">SERVICES</a>
       
       <!-- Mobile-only user menu items -->
@@ -120,6 +120,66 @@
 
   <!-- Page content -->
   {% block content %}{% endblock %}
+
+  <!-- Footer -->
+  <footer style="background: #fff; color: #333; padding: 50px 20px 25px; margin-top: 80px; border-top: 1px solid #eee;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 35px; margin-bottom: 35px;">
+        
+        <!-- About Section -->
+        <div>
+          <h3 style="color: #ff6f91; margin-bottom: 12px; font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">About Pethood</h3>
+          <p style="color: #666; line-height: 1.7; font-size: 13px;">Premium pet products and dog adoption services connecting loving families with adorable dogs.</p>
+        </div>
+        
+        <!-- Quick Links -->
+        <div>
+          <h3 style="color: #ff6f91; margin-bottom: 12px; font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Quick Links</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="margin-bottom: 8px;"><a href="{% url 'home' %}" style="color: #344055; text-decoration: none; font-size: 13px; font-weight: 600; transition: color 0.3s;">Home</a></li>
+            <li style="margin-bottom: 8px;"><a href="{% url 'shop_home' %}" style="color: #344055; text-decoration: none; font-size: 13px; font-weight: 600; transition: color 0.3s;">Shop</a></li>
+            <li style="margin-bottom: 8px;"><a href="{% url 'dog:dog_list' %}" style="color: #344055; text-decoration: none; font-size: 13px; font-weight: 600; transition: color 0.3s;">Our Dogs</a></li>
+            <li style="margin-bottom: 8px;"><a href="{% url 'dog:add_dog_listing' %}" style="color: #344055; text-decoration: none; font-size: 13px; font-weight: 600; transition: color 0.3s;">List a Dog</a></li>
+          </ul>
+        </div>
+        
+        <!-- Legal -->
+        <div>
+          <h3 style="color: #ff6f91; margin-bottom: 12px; font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Legal</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="margin-bottom: 8px;"><a href="{% url 'privacy_policy' %}" style="color: #344055; text-decoration: none; font-size: 13px; font-weight: 600; transition: color 0.3s;">Privacy Policy</a></li>
+            <li style="margin-bottom: 8px;"><a href="{% url 'terms_of_use' %}" style="color: #344055; text-decoration: none; font-size: 13px; font-weight: 600; transition: color 0.3s;">Terms of Use</a></li>
+          </ul>
+        </div>
+        
+        <!-- Contact Info -->
+        <div>
+          <h3 style="color: #ff6f91; margin-bottom: 12px; font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Contact</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="margin-bottom: 8px; color: #666; font-size: 13px;"><i class="fas fa-envelope" style="margin-right: 8px; color: #ff6f91; width: 16px;"></i>info@pethood.com</li>
+            <li style="margin-bottom: 8px; color: #666; font-size: 13px;"><i class="fas fa-phone" style="margin-right: 8px; color: #ff6f91; width: 16px;"></i>+977 123-4567</li>
+            <li style="margin-bottom: 8px; color: #666; font-size: 13px;"><i class="fas fa-map-marker-alt" style="margin-right: 8px; color: #ff6f91; width: 16px;"></i>Kathmandu, Nepal</li>
+          </ul>
+        </div>
+        
+        <!-- Social Media -->
+        <div>
+          <h3 style="color: #ff6f91; margin-bottom: 12px; font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Follow Us</h3>
+          <div style="display: flex; gap: 12px;">
+            <a href="#" style="width: 38px; height: 38px; background: #fff; border: 2px solid #ff6f91; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ff6f91; font-size: 16px; text-decoration: none; transition: all 0.3s;"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" style="width: 38px; height: 38px; background: #fff; border: 2px solid #ff6f91; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ff6f91; font-size: 16px; text-decoration: none; transition: all 0.3s;"><i class="fab fa-instagram"></i></a>
+            <a href="#" style="width: 38px; height: 38px; background: #fff; border: 2px solid #ff6f91; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ff6f91; font-size: 16px; text-decoration: none; transition: all 0.3s;"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+        
+      </div>
+      
+      <!-- Copyright -->
+      <div style="border-top: 1px solid #eee; padding-top: 20px; text-align: center;">
+        <p style="color: #777; font-size: 13px; margin: 0;">&copy; 2026 Pethood. All rights reserved. Made with <i class="fas fa-heart" style="color: #ff6f91;"></i> for pets.</p>
+      </div>
+    </div>
+  </footer>
 
   <!-- JavaScript for mobile menu and dropdown -->
   <script>

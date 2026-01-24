@@ -1,0 +1,365 @@
+{% extends 'base.html' %}
+{% block title %}List a Dog for Adoption - Pethood{% endblock %}
+{% load static %}
+{% block content %}
+
+<style>
+body {
+    background: #fffbea;
+}
+
+.listing-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.listing-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.listing-header h1 {
+    font-size: 36px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+.listing-header h1 span {
+    color: #e63946;
+}
+
+.listing-header p {
+    font-size: 16px;
+    color: #666;
+}
+
+.listing-content {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 40px;
+    align-items: start;
+}
+
+.listing-sidebar {
+    position: sticky;
+    top: 100px;
+}
+
+.sidebar-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+    border: 2px solid #f5d76e;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.sidebar-card h3 {
+    margin: 0 0 15px 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sidebar-card h3 span {
+    color: #e63946;
+}
+
+.sidebar-card ul {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.8;
+}
+
+.sidebar-card li {
+    margin-bottom: 8px;
+}
+
+.sidebar-illustration {
+    text-align: center;
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    border: 2px solid #f5d76e;
+}
+
+.sidebar-illustration i {
+    font-size: 80px;
+    color: #ff6f91;
+    margin-bottom: 15px;
+}
+
+.sidebar-illustration p {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+    font-weight: 500;
+}
+
+.listing-form {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    border: 2px solid #f5d76e;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.form-section {
+    margin-bottom: 35px;
+}
+
+.form-section-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f5d76e;
+    letter-spacing: 0.5px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 14px;
+}
+
+.form-input,
+.form-textarea,
+.form-file {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #f5d76e;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s;
+    background: white;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: #e07b52;
+    background: #fff7d1;
+}
+
+.form-textarea {
+    resize: vertical;
+    font-family: inherit;
+}
+
+.form-file {
+    padding: 10px;
+}
+
+.form-note {
+    font-size: 12px;
+    color: #999;
+    margin-top: 5px;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: #ff6f91;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.submit-btn:hover {
+    background: #ff5577;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 111, 145, 0.3);
+}
+
+.errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0 0;
+    color: #dc3545;
+    font-size: 12px;
+}
+
+@media (max-width: 968px) {
+    .listing-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .listing-sidebar {
+        position: static;
+        order: 2;
+    }
+    
+    .sidebar-illustration {
+        display: none;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<div class="listing-container">
+    <div class="listing-header">
+        <h1>LIST A <span>DOG</span></h1>
+        <p>Help a dog find their forever home</p>
+    </div>
+
+    <div class="listing-content">
+        <!-- Sidebar -->
+        <div class="listing-sidebar">
+            <div class="sidebar-card">
+                <h3>HOW IT <span>WORKS</span></h3>
+                <ul>
+                    <li>Fill out the form with dog details</li>
+                    <li>Our team reviews your listing</li>
+                    <li>Get notified when approved</li>
+                    <li>Adopters contact you directly</li>
+                </ul>
+            </div>
+
+            <div class="sidebar-card">
+                <h3>TIPS FOR <span>SUCCESS</span></h3>
+                <ul>
+                    <li>Upload clear, well-lit photos</li>
+                    <li>Be honest about behaviour</li>
+                    <li>Provide complete information</li>
+                    <li>Respond promptly to inquiries</li>
+                </ul>
+            </div>
+
+            <div class="sidebar-illustration">
+                <i class="fas fa-paw"></i>
+                <p>Help connect dogs with loving families</p>
+            </div>
+        </div>
+
+        <!-- Form -->
+        <form method="post" enctype="multipart/form-data" class="listing-form">
+            {% csrf_token %}
+            
+            <!-- Basic Information -->
+            <div class="form-section">
+                <div class="form-section-title">Basic Information</div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                        {{ form.name }}
+                        {{ form.name.errors }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.breed.id_for_label }}">{{ form.breed.label }}</label>
+                        {{ form.breed }}
+                        {{ form.breed.errors }}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.gender.id_for_label }}">{{ form.gender.label }}</label>
+                        {{ form.gender }}
+                        {{ form.gender.errors }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.age.id_for_label }}">{{ form.age.label }}</label>
+                        {{ form.age }}
+                        <p class="form-note">e.g., "2 years", "6 months"</p>
+                        {{ form.age.errors }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details -->
+            <div class="form-section">
+                <div class="form-section-title">Details</div>
+                
+                <div class="form-group">
+                    <label for="{{ form.behaviour.id_for_label }}">{{ form.behaviour.label }}</label>
+                    {{ form.behaviour }}
+                    <p class="form-note">e.g., "Friendly, Energetic, Good with kids"</p>
+                    {{ form.behaviour.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                    {{ form.description }}
+                    <p class="form-note">Describe personality, habits, and any special needs</p>
+                    {{ form.description.errors }}
+                </div>
+            </div>
+
+            <!-- Location & Price -->
+            <div class="form-section">
+                <div class="form-section-title">Location & Pricing</div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.location.id_for_label }}">{{ form.location.label }}</label>
+                        {{ form.location }}
+                        {{ form.location.errors }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.price.id_for_label }}">{{ form.price.label }}</label>
+                        {{ form.price }}
+                        <p class="form-note">Set to 0 for free adoption</p>
+                        {{ form.price.errors }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Images -->
+            <div class="form-section">
+                <div class="form-section-title">Photos</div>
+                
+                <div class="form-group">
+                    <label for="{{ form.image.id_for_label }}">{{ form.image.label }}</label>
+                    {{ form.image }}
+                    <p class="form-note">Main photo of the dog</p>
+                    {{ form.image.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="additional_images">Additional Images (Optional)</label>
+                    <input type="file" name="additional_images" id="additional_images" class="form-file" accept="image/*" multiple>
+                    <p class="form-note">Upload up to 4 additional photos</p>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Submit for Approval</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
