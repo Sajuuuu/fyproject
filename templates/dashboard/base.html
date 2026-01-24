@@ -65,6 +65,7 @@
         .sidebar-menu a {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             padding: 15px 25px;
             color: #344055;
             text-decoration: none;
@@ -83,6 +84,12 @@
             margin-right: 12px;
             width: 20px;
             text-align: center;
+        }
+        
+        .menu-item-content {
+            display: flex;
+            align-items: center;
+            flex: 1;
         }
 
         /* Main Content */
@@ -327,6 +334,19 @@
             color: #856404;
         }
 
+        /* Notification Badge */
+        .notification-badge {
+            background: #ff6f91;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-left: auto;
+            min-width: 20px;
+            text-align: center;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -355,37 +375,57 @@
         <ul class="sidebar-menu">
             <li>
                 <a href="{% url 'dashboard:home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">
-                    <i class="fas fa-th-large"></i> Dashboard
+                    <span class="menu-item-content">
+                        <i class="fas fa-th-large"></i> Dashboard
+                    </span>
                 </a>
             </li>
             <li>
                 <a href="{% url 'dashboard:product_list' %}" class="{% if 'product' in request.resolver_match.url_name %}active{% endif %}">
-                    <i class="fas fa-box"></i> Products
+                    <span class="menu-item-content">
+                        <i class="fas fa-box"></i> Products
+                    </span>
                 </a>
             </li>
             <li>
                 <a href="{% url 'dashboard:dog_list' %}" class="{% if 'dog' in request.resolver_match.url_name %}active{% endif %}">
-                    <i class="fas fa-dog"></i> Dog Listings
+                    <span class="menu-item-content">
+                        <i class="fas fa-dog"></i> Dog Listings
+                    </span>
+                    {% if pending_dogs_count > 0 %}
+                    <span class="notification-badge">{{ pending_dogs_count }}</span>
+                    {% endif %}
                 </a>
             </li>
             <li>
                 <a href="{% url 'dashboard:order_list' %}" class="{% if 'order' in request.resolver_match.url_name %}active{% endif %}">
-                    <i class="fas fa-shopping-cart"></i> Orders
+                    <span class="menu-item-content">
+                        <i class="fas fa-shopping-cart"></i> Orders
+                    </span>
+                    {% if pending_orders_count > 0 %}
+                    <span class="notification-badge">{{ pending_orders_count }}</span>
+                    {% endif %}
                 </a>
             </li>
             <li>
                 <a href="{% url 'dashboard:user_list' %}" class="{% if 'user' in request.resolver_match.url_name %}active{% endif %}">
-                    <i class="fas fa-users"></i> Users
+                    <span class="menu-item-content">
+                        <i class="fas fa-users"></i> Users
+                    </span>
                 </a>
             </li>
             <li>
                 <a href="{% url 'home' %}">
-                    <i class="fas fa-globe"></i> View Site
+                    <span class="menu-item-content">
+                        <i class="fas fa-globe"></i> View Site
+                    </span>
                 </a>
             </li>
             <li>
                 <a href="{% url 'logout' %}">
-                    <i class="fas fa-sign-out-alt"></i> Logout
+                    <span class="menu-item-content">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </span>
                 </a>
             </li>
         </ul>

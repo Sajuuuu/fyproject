@@ -24,3 +24,10 @@ Thumbs.db
 
 # IDE files
 .vscode/
+
+# Database files
+*.sqlite3
+*.db
+*.db-journal
+
+db.sqlite3

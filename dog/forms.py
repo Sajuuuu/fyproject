@@ -28,6 +28,12 @@ class DogListingForm(forms.ModelForm):
             'location': 'Location',
             'image': 'Main Image',
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Make image field optional when editing (instance exists)
+        if self.instance and self.instance.pk:
+            self.fields['image'].required = False
 
 
 class DogImageForm(forms.ModelForm):

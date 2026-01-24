@@ -10,6 +10,16 @@ from shop.models import Product, Order, OrderItem, Size
 from dog.models import Dog, DogImage
 from decimal import Decimal
 
+# Context processor for notification counts
+def get_notification_counts():
+    """Get counts for pending items to show in sidebar"""
+    pending_dogs = Dog.objects.filter(is_approved=False).count()
+    pending_orders = Order.objects.filter(status='pending').count()
+    return {
+        'pending_dogs_count': pending_dogs,
+        'pending_orders_count': pending_orders,
+    }
+
 # Admin Dashboard Home
 @staff_member_required
 def dashboard_home(request):
@@ -39,6 +49,7 @@ def dashboard_home(request):
         'pending_dogs': pending_dogs,
         'recent_orders': recent_orders,
         'total_revenue': total_revenue,
+        **get_notification_counts(),
     }
     return render(request, 'dashboard/home.html', context)
 
@@ -68,6 +79,7 @@ def product_list(request):
         'categories': Product.CATEGORY_CHOICES,
         'query': query,
         'selected_category': category,
+        **get_notification_counts(),
     }
     return render(request, 'dashboard/product_list.html', context)
 
@@ -99,6 +111,7 @@ def product_add(request):
     context = {
         'categories': Product.CATEGORY_CHOICES,
         'sizes': sizes,
+        **get_notification_counts(),
     }
     return render(request, 'dashboard/product_form.html', context)
 
@@ -134,6 +147,7 @@ def product_edit(request, product_id):
         'product': product,
         'categories': Product.CATEGORY_CHOICES,
         'sizes': sizes,
+        **get_notification_counts(),
     }
     return render(request, 'dashboard/product_form.html', context)
 
@@ -149,7 +163,10 @@ def product_delete(request, product_id):
         messages.success(request, f'Product "{product_name}" deleted successfully!')
         return redirect('dashboard:product_list')
     
-    return render(request, 'dashboard/product_confirm_delete.html', {'product': product})
+    return render(request, 'dashboard/product_confirm_delete.html', {
+        'product': product,
+        **get_notification_counts(),
+    })
 
 
 # ==================== DOG MANAGEMENT ====================
@@ -173,6 +190,7 @@ def dog_list(request):
     context = {
         'dogs': dogs,
         'selected_status': status,
+        **get_notification_counts(),
     }
     return render(request, 'dashboard/dog_list.html', context)
 
@@ -221,7 +239,10 @@ The Pethood Team
         
         return redirect('dashboard:dog_list')
     
-    return render(request, 'dashboard/dog_approve.html', {'dog': dog})
+    return render(request, 'dashboard/dog_approve.html', {
+        'dog': dog,
+        **get_notification_counts(),
+    })
 
 
 @staff_member_required
@@ -235,7 +256,10 @@ def dog_reject(request, dog_id):
         
         if not message:
             messages.error(request, 'Please provide a rejection reason.')
-            return render(request, 'dashboard/dog_reject.html', {'dog': dog})
+            return render(request, 'dashboard/dog_reject.html', {
+                'dog': dog,
+                **get_notification_counts(),
+            })
         
         # Send rejection email before deleting if checkbox is checked
         if send_email:
@@ -273,7 +297,10 @@ The Pethood Team
         dog.delete()
         return redirect('dashboard:dog_list')
     
-    return render(request, 'dashboard/dog_reject.html', {'dog': dog})
+    return render(request, 'dashboard/dog_reject.html', {
+        'dog': dog,
+        **get_notification_counts(),
+    })
 
 
 @staff_member_required
@@ -317,7 +344,10 @@ The Pethood Team
         
         return redirect('dashboard:dog_list')
     
-    return render(request, 'dashboard/dog_adopt.html', {'dog': dog})
+    return render(request, 'dashboard/dog_adopt.html', {
+        'dog': dog,
+        **get_notification_counts(),
+    })
 
 
 # ==================== USER MANAGEMENT ====================
@@ -345,6 +375,7 @@ def user_list(request):
     context = {
         'users': users,
         'query': query,
+        **get_notification_counts(),
     }
     return render(request, 'dashboard/user_list.html', context)
 
@@ -367,6 +398,7 @@ def user_detail(request, user_id):
         'orders': orders,
         'dogs': dogs,
         'total_spent': total_spent,
+        **get_notification_counts(),
     }
     return render(request, 'dashboard/user_detail.html', context)
 
@@ -389,6 +421,7 @@ def order_list(request):
         'orders': orders,
         'status_choices': Order.STATUS_CHOICES,
         'selected_status': status,
+        **get_notification_counts(),
     }
     return render(request, 'dashboard/order_list.html', context)
 
@@ -443,5 +476,6 @@ The Pethood Team
     context = {
         'order': order,
         'status_choices': Order.STATUS_CHOICES,
+        **get_notification_counts(),
     }
     return render(request, 'dashboard/order_detail.html', context)

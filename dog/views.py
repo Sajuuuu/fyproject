@@ -56,7 +56,11 @@ def dog_list(request):
 @login_required
 def dog_detail(request, slug):
     """Display detailed information about a specific dog (login required)"""
-    dog = get_object_or_404(Dog, slug=slug, is_approved=True)
+    # Staff members can view unapproved dogs, regular users can only view approved ones
+    if request.user.is_staff:
+        dog = get_object_or_404(Dog, slug=slug)
+    else:
+        dog = get_object_or_404(Dog, slug=slug, is_approved=True)
     
     # Get lister's default address for phone number
     lister_phone = None
@@ -136,6 +140,15 @@ def edit_dog_listing(request, slug):
             
             messages.success(request, f'Listing for {dog.name} has been updated successfully!')
             return redirect('profile')
+        else:
+            # Show specific validation errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    if field == '__all__':
+                        messages.error(request, error)
+                    else:
+                        field_label = form.fields[field].label or field
+                        messages.error(request, f'{field_label}: {error}')
     else:
         form = DogListingForm(instance=dog)
     
