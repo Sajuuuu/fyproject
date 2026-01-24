@@ -61,6 +61,9 @@
             <button type="submit" class="btn btn-success">
                 <i class="fas fa-check"></i> Approve Listing
             </button>
+            <a href="{% url 'dog:dog_detail' dog.slug %}" class="btn btn-primary" target="_blank">
+                <i class="fas fa-eye"></i> Preview How It Will Look
+            </a>
             <a href="{% url 'dashboard:dog_list' %}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Back
             </a>
