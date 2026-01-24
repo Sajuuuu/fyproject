@@ -205,6 +205,31 @@ h2 span {
     cursor: not-allowed;
 }
 
+.btn-view-all {
+    float: right;
+    background-color: #fff;
+    color: #ff6f91;
+    padding: 8px 16px;
+    font-size: 14px;
+    border: 2px solid #ff6f91;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+    font-weight: 600;
+}
+
+.btn-view-all:hover {
+    background-color: #ff6f91;
+    color: white;
+}
+
+.btn-view-all i {
+    font-size: 12px;
+}
+
 .no-addresses {
     text-align: center;
     padding: 40px;
@@ -218,44 +243,201 @@ h2 span {
 
 /* Order History */
 .orders-list {
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: 20px;
 }
 
 .order-card {
-    background: #fff5f8;
+    background: white;
     border-radius: 12px;
-    padding: 25px;
-    border-left: 4px solid #ff6f91;
+    padding: 24px;
+    border: 2px solid #ffe6f0;
     transition: all 0.3s;
-    cursor: pointer;
 }
 
 .order-card:hover {
-    box-shadow: 0 4px 12px rgba(255, 111, 145, 0.2);
-    transform: translateY(-2px);
-}
-
-.order-card.expanded {
-    border-left-width: 6px;
+    border-color: #ff6f91;
+    box-shadow: 0 6px 16px rgba(255, 111, 145, 0.15);
 }
 
 .order-header {
     display: flex;
     justify-content: space-between;
-    align-items: start;
-    margin-bottom: 15px;
+    align-items: flex-start;
+    margin-bottom: 20px;
     flex-wrap: wrap;
     gap: 15px;
+}
+
+.order-number {
+    font-size: 18px;
+    font-weight: 700;
+    color: #344055;
+}
+
+.order-number span {
+    color: #ff6f91;
+}
+
+.order-meta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.order-date {
+    color: #666;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.order-date i {
+    color: #ff6f91;
 }
 
 .order-summary {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 0;
-    border-top: 1px solid #ffe6f0;
+    padding: 16px;
+    background: #fff5f8;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.order-summary-left {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.order-info-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    color: #666;
+}
+
+.order-info-row i {
+    color: #ff6f91;
+    font-size: 13px;
+}
+
+.order-summary-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.order-total {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ff6f91;
+}
+
+.order-actions-menu {
+    position: relative;
+}
+
+.order-menu-btn {
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: #344055;
+}
+
+.order-menu-btn:hover {
+    background: #f8f9fa;
+    border-color: #ff6f91;
+    color: #ff6f91;
+}
+
+.order-details {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid #ffe6f0;
+}
+
+.order-items {
+    display: grid;
+    gap: 12px;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 14px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    gap: 15px;
+}
+
+.item-details {
+    flex: 1;
+}
+
+.item-name {
+    font-weight: 600;
+    color: #344055;
+    margin-bottom: 6px;
+    font-size: 15px;
+}
+
+.item-meta {
+    font-size: 13px;
+    color: #666;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.item-price {
+    font-weight: 700;
+    color: #ff6f91;
+    font-size: 16px;
+}
+
+.order-shipping {
+    margin-top: 20px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.order-shipping h5 {
+    color: #344055;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.order-shipping h5 i {
+    color: #ff6f91;
+}
+
+.order-shipping p {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
 }
 
 .expand-icon {
@@ -414,6 +596,200 @@ h2 span {
 
 .no-orders .btn {
     padding: 12px 30px;
+}
+
+/* Dog Listings */
+.listing-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    transition: all 0.3s;
+    border: 2px solid #ffe6f0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.listing-card:hover {
+    box-shadow: 0 6px 16px rgba(255, 111, 145, 0.15);
+    border-color: #ff6f91;
+}
+
+.listing-image {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 12px;
+    flex-shrink: 0;
+    border: 3px solid #fff5f8;
+}
+
+.listing-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.listing-info h4 {
+    color: #344055;
+    font-size: 24px;
+    margin-bottom: 14px;
+    font-weight: 700;
+}
+
+.listing-meta {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin: 12px 0 14px 0;
+}
+
+.listing-meta span {
+    color: #666;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.listing-meta i {
+    color: #ff6f91;
+    font-size: 15px;
+}
+
+.listing-status {
+    display: inline-block;
+    padding: 7px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 6px;
+}
+
+.listing-actions {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.menu-btn {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: #344055;
+}
+
+.menu-btn:hover {
+    background: #e9ecef;
+    border-color: #ff6f91;
+    color: #ff6f91;
+}
+
+.menu-btn i {
+    font-size: 18px;
+}
+
+.dropdown-menu-actions {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    min-width: 180px;
+    z-index: 100;
+    display: none;
+    overflow: hidden;
+}
+
+.dropdown-menu-actions.show {
+    display: block;
+}
+
+.dropdown-menu-actions a,
+.dropdown-menu-actions button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: #344055;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.dropdown-menu-actions a:hover,
+.dropdown-menu-actions button:hover {
+    background: #f8f9fa;
+}
+
+.dropdown-menu-actions a i,
+.dropdown-menu-actions button i {
+    font-size: 14px;
+    width: 18px;
+}
+
+.dropdown-menu-actions .view-action {
+    color: #1565c0;
+}
+
+.dropdown-menu-actions .edit-action {
+    color: #0277bd;
+}
+
+.dropdown-menu-actions .adopted-action {
+    color: #2e7d32;
+}
+
+.dropdown-menu-actions .delete-action {
+    color: #c62828;
+}
+
+.dropdown-menu-actions .divider {
+    height: 1px;
+    background: #e9ecef;
+    margin: 4px 0;
+}
+
+@media (max-width: 992px) {
+    .listing-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .listing-image {
+        width: 100%;
+        max-width: 300px;
+        height: 250px;
+    }
+    
+    .listing-info {
+        width: 100%;
+    }
+    
+    .listing-meta {
+        justify-content: center;
+    }
+    
+    .dropdown-menu-actions {
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 }
 
 /* Modal */
@@ -618,7 +994,7 @@ h2 span {
                 <div class="address-details">
                     <p><strong>{{ address.address_line }}</strong></p>
                     <p>{{ address.city }}{% if address.postal_code %}, {{ address.postal_code }}{% endif %}</p>
-                    <p class="phone">📞 {{ address.phone }}</p>
+                    <p class="phone">{{ address.phone }}</p>
                 </div>
 
                 <div class="address-actions">
@@ -649,40 +1025,65 @@ h2 span {
 
     <!-- Order History Section -->
     <div class="section">
-        <h3>Order History</h3>
+        <h3>
+            Order History
+            {% if total_orders > 5 %}
+            <a href="{% url 'all_orders' %}" class="btn-view-all">
+                View All ({{ total_orders }})
+                <i class="fas fa-arrow-right"></i>
+            </a>
+            {% endif %}
+        </h3>
         {% if orders %}
         <div class="orders-list">
             {% for order in orders %}
-            <div class="order-card" onclick="toggleOrderDetails(this)">
+            <div class="order-card" onclick="window.location.href='{% url 'order_detail' order.id %}'" style="cursor: pointer;">
                 <div class="order-header">
                     <div class="order-number">
-                        Order: <span>{{ order.order_number }}</span>
+                        Order: <span>#{{ order.order_number }}</span>
                     </div>
                     <div class="order-meta">
-                        <div class="order-date">{{ order.created_at|date:"M d, Y" }}</div>
-                        <span class="status-badge status-{{ order.status }}">
+                        <div class="order-date">
+                            <i class="fas fa-calendar"></i>
+                            {{ order.created_at|date:"M d, Y" }}
+                        </div>
+                        <span class="listing-status status-{{ order.status }}">
                             {{ order.get_status_display }}
                         </span>
                     </div>
                 </div>
                 
                 <div class="order-summary">
-                    <div>
-                        <strong>{{ order.items.count }}</strong> item{{ order.items.count|pluralize }} • 
-                        <strong>{{ order.get_payment_method_display }}</strong>
-                        {% if order.payment_method == 'khalti' %}
-                            {% if order.payment_verified %}
-                                <span style="color: #4caf50; font-weight: 600;"> • Paid</span>
-                            {% else %}
-                                <span style="color: #ff9800; font-weight: 600;"> • Payment Pending</span>
+                    <div class="order-summary-left">
+                        <div class="order-info-row">
+                            <span><i class="fas fa-box"></i> <strong>{{ order.items.count }}</strong> item{{ order.items.count|pluralize }}</span>
+                            <span><i class="fas fa-credit-card"></i> {{ order.get_payment_method_display }}</span>
+                            {% if order.payment_method == 'khalti' %}
+                                {% if order.payment_verified %}
+                                    <span style="color: #4caf50; font-weight: 600;"><i class="fas fa-check-circle"></i> Paid</span>
+                                {% else %}
+                                    <span style="color: #ff9800; font-weight: 600;"><i class="fas fa-clock"></i> Payment Pending</span>
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <div class="order-total">
-                            <span>रु{{ order.total_amount }}</span>
                         </div>
-                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="order-summary-right">
+                        <div class="order-total">रु{{ order.total_amount }}</div>
+                        {% if order.status == 'pending' %}
+                        <div class="order-actions-menu">
+                            <button class="order-menu-btn" onclick="toggleDropdown(event, 'order-menu-{{ order.id }}')">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div id="order-menu-{{ order.id }}" class="dropdown-menu-actions">
+                                <form method="POST" action="{% url 'cancel_order' order.id %}" style="margin: 0;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="delete-action" onclick="return confirm('Cancel order #{{ order.order_number }}?')">
+                                        <i class="fas fa-times-circle"></i> Cancel Order
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
                 
@@ -693,13 +1094,24 @@ h2 span {
                             <div class="item-details">
                                 <div class="item-name">{{ item.product.name }}</div>
                                 <div class="item-meta">
-                                    Qty: {{ item.quantity }}
-                                    {% if item.size %} | Size: {{ item.size }}{% endif %}
+                                    <span>Qty: {{ item.quantity }}</span>
+                                    {% if item.size %}<span>Size: {{ item.size }}</span>{% endif %}
+                                    <span>रु{{ item.price }} each</span>
                                 </div>
                             </div>
                             <div class="item-price">रु{{ item.subtotal }}</div>
                         </div>
                         {% endfor %}
+                    </div>
+                    
+                    <div class="order-shipping">
+                        <h5><i class="fas fa-shipping-fast"></i> Shipping Address</h5>
+                        <p>
+                            {{ order.first_name }} {{ order.last_name }}<br>
+                            {{ order.address }}<br>
+                            {{ order.city }}{% if order.postal_code %}, {{ order.postal_code }}{% endif %}<br>
+                            Phone: {{ order.phone }}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -713,6 +1125,85 @@ h2 span {
         </div>
         {% endif %}
     </div>
+
+    <!-- Dog Listings Section -->
+    {% if my_dogs %}
+    <div class="section">
+        <h3>
+            My Dog Listings
+            {% if total_dogs > 5 %}
+            <a href="{% url 'all_listings' %}" class="btn-view-all" style="margin-right: 10px;">
+                View All ({{ total_dogs }})
+                <i class="fas fa-arrow-right"></i>
+            </a>
+            {% endif %}
+            <a href="{% url 'dog:add_dog_listing' %}" class="btn btn-add" style="font-size: 14px; padding: 8px 16px;">
+                <i class="fas fa-plus"></i> Add New
+            </a>
+        </h3>
+        
+        {% for dog in my_dogs %}
+        <div class="listing-card">
+            <img src="{{ dog.image.url }}" alt="{{ dog.name }}" class="listing-image">
+            
+            <div class="listing-info">
+                <h4>{{ dog.name }}</h4>
+                <div class="listing-meta">
+                    <span><i class="fas fa-paw"></i> {{ dog.breed }}</span>
+                    <span><i class="fas fa-venus-mars"></i> {{ dog.get_gender_display }}</span>
+                    <span><i class="fas fa-calendar"></i> {{ dog.age }} old</span>
+                </div>
+                <div>
+                    {% if dog.is_adopted %}
+                        <span class="listing-status status-adopted">✓ Adopted</span>
+                    {% elif dog.is_approved %}
+                        <span class="listing-status status-delivered">✓ Approved & Live</span>
+                    {% else %}
+                        <span class="listing-status status-pending">⏳ Pending Approval</span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="listing-actions">
+                <button class="menu-btn" onclick="toggleDropdown(event, 'menu-{{ dog.id }}')">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <div id="menu-{{ dog.id }}" class="dropdown-menu-actions">
+                    {% if dog.is_approved %}
+                        <a href="{% url 'dog:dog_detail' dog.slug %}" class="view-action">
+                            <i class="fas fa-eye"></i> View Listing
+                        </a>
+                    {% endif %}
+                    
+                    {% if not dog.is_adopted %}
+                        <a href="{% url 'dog:edit_dog_listing' dog.slug %}" class="edit-action">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        
+                        {% if dog.is_approved %}
+                            <div class="divider"></div>
+                            <form method="POST" action="{% url 'dog:mark_as_adopted' dog.slug %}" style="margin: 0;">
+                                {% csrf_token %}
+                                <button type="submit" class="adopted-action" onclick="return confirm('Mark {{ dog.name }} as adopted?')">
+                                    <i class="fas fa-check"></i> Mark as Adopted
+                                </button>
+                            </form>
+                        {% endif %}
+                        
+                        <div class="divider"></div>
+                        <form method="POST" action="{% url 'dog:delete_dog_listing' dog.slug %}" style="margin: 0;">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-action" onclick="return confirm('Delete listing for {{ dog.name }}?')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 </div>
 
 <!-- Add Address Modal -->
@@ -831,10 +1322,6 @@ h2 span {
 </div>
 
 <script>
-function toggleOrderDetails(card) {
-    card.classList.toggle('expanded');
-}
-
 function openAddModal() {
     document.getElementById('addModal').classList.add('active');
 }
@@ -886,7 +1373,31 @@ window.onclick = function(event) {
     if (event.target == accountModal) {
         closeAccountModal();
     }
+    
+    // Close dropdowns when clicking outside
+    if (!event.target.closest('.listing-actions')) {
+        document.querySelectorAll('.dropdown-menu-actions').forEach(menu => {
+            menu.classList.remove('show');
+        });
+    }
 }
+
+function toggleDropdown(event, menuId) {
+    event.stopPropagation();
+    const menu = document.getElementById(menuId);
+    const isShown = menu.classList.contains('show');
+    
+    // Close all other dropdowns
+    document.querySelectorAll('.dropdown-menu-actions').forEach(m => {
+        m.classList.remove('show');
+    });
+    
+    // Toggle current dropdown
+    if (!isShown) {
+        menu.classList.add('show');
+    }
+}
+
 </script>
 
 {% endblock %}

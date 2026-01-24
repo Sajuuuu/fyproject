@@ -1,0 +1,300 @@
+{% extends 'base.html' %}
+{% block title %}All Orders - Pethood{% endblock %}
+{% load static %}
+{% block content %}
+
+<style>
+/* All Orders page styles */
+body {
+    background-color: #fff9f0;
+    font-family: 'Arial', sans-serif;
+}
+
+.orders-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 30px auto 50px auto;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.page-header h2 {
+    font-size: 28px;
+    color: #344055;
+    font-weight: 700;
+    margin: 0;
+}
+
+.page-header h2 span {
+    color: #ff6f91;
+}
+
+.btn-back {
+    background-color: #fff;
+    color: #ff6f91;
+    padding: 10px 20px;
+    border: 2px solid #ff6f91;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-back:hover {
+    background-color: #ff6f91;
+    color: white;
+}
+
+.orders-list {
+    display: grid;
+    gap: 20px;
+}
+
+.order-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    border: 2px solid #ffe6f0;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.order-card:hover {
+    border-color: #ff6f91;
+    box-shadow: 0 6px 16px rgba(255, 111, 145, 0.15);
+    transform: translateY(-2px);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.order-number {
+    font-size: 18px;
+    font-weight: 700;
+    color: #344055;
+}
+
+.order-number span {
+    color: #ff6f91;
+}
+
+.order-meta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.order-date {
+    color: #666;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.order-date i {
+    color: #ff6f91;
+}
+
+.listing-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-packing {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.status-processing {
+    background-color: #cce5ff;
+    color: #004085;
+}
+
+.status-shipped {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-delivered {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-cancelled {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.order-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: #fff5f8;
+    border-radius: 8px;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.order-summary-left {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.order-info-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    color: #666;
+}
+
+.order-info-row i {
+    color: #ff6f91;
+}
+
+.order-summary-right {
+    text-align: right;
+}
+
+.order-total {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ff6f91;
+}
+
+.no-orders {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 12px;
+}
+
+.no-orders i {
+    font-size: 64px;
+    color: #ff6f91;
+    margin-bottom: 20px;
+}
+
+.no-orders p {
+    color: #666;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.btn-shop {
+    background-color: #ff6f91;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-shop:hover {
+    background-color: #ff3f6f;
+}
+
+@media (max-width: 768px) {
+    .order-header {
+        flex-direction: column;
+    }
+    
+    .order-summary {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .order-summary-right {
+        text-align: left;
+        width: 100%;
+    }
+}
+</style>
+
+<div class="orders-container">
+    <div class="page-header">
+        <h2><span>All</span> Orders</h2>
+        <a href="{% url 'profile' %}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Profile
+        </a>
+    </div>
+
+    {% if orders %}
+    <div class="orders-list">
+        {% for order in orders %}
+        <div class="order-card" onclick="window.location.href='{% url 'order_detail' order.id %}'">
+            <div class="order-header">
+                <div class="order-number">
+                    Order: <span>#{{ order.order_number }}</span>
+                </div>
+                <div class="order-meta">
+                    <div class="order-date">
+                        <i class="fas fa-calendar"></i>
+                        {{ order.created_at|date:"M d, Y" }}
+                    </div>
+                    <span class="listing-status status-{{ order.status }}">
+                        {{ order.get_status_display }}
+                    </span>
+                </div>
+            </div>
+            
+            <div class="order-summary">
+                <div class="order-summary-left">
+                    <div class="order-info-row">
+                        <span><i class="fas fa-box"></i> <strong>{{ order.items.count }}</strong> item{{ order.items.count|pluralize }}</span>
+                        <span><i class="fas fa-credit-card"></i> {{ order.get_payment_method_display }}</span>
+                        {% if order.payment_method == 'khalti' %}
+                            {% if order.payment_verified %}
+                                <span style="color: #4caf50; font-weight: 600;"><i class="fas fa-check-circle"></i> Paid</span>
+                            {% else %}
+                                <span style="color: #ff9800; font-weight: 600;"><i class="fas fa-clock"></i> Payment Pending</span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="order-summary-right">
+                    <div class="order-total">NPR {{ order.total_amount }}</div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-orders">
+        <i class="fas fa-shopping-bag"></i>
+        <p>You haven't placed any orders yet.</p>
+        <a href="{% url 'shop' %}" class="btn-shop">Start Shopping</a>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

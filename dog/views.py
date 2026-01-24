@@ -74,3 +74,59 @@ def add_dog_listing(request):
         form = DogListingForm()
     
     return render(request, 'add_dog_listing.html', {'form': form})
+
+@login_required
+def my_listings(request):
+    """Display user's dog listings"""
+    my_dogs = Dog.objects.filter(lister=request.user).order_by('-created_at')
+    return render(request, 'my_listings.html', {'my_dogs': my_dogs})
+
+@login_required
+def edit_dog_listing(request, slug):
+    """Edit an existing dog listing"""
+    dog = get_object_or_404(Dog, slug=slug, lister=request.user)
+    
+    if request.method == 'POST':
+        form = DogListingForm(request.POST, request.FILES, instance=dog)
+        images = request.FILES.getlist('additional_images')
+        
+        if form.is_valid():
+            dog = form.save()
+            
+            # Add new additional images
+            current_images_count = dog.images.count()
+            for image in images[:5 - current_images_count]:  # Max 5 total images
+                DogImage.objects.create(dog=dog, image=image)
+            
+            messages.success(request, f'Listing for {dog.name} has been updated successfully!')
+            return redirect('profile')
+    else:
+        form = DogListingForm(instance=dog)
+    
+    return render(request, 'edit_dog_listing.html', {'form': form, 'dog': dog})
+
+@login_required
+def delete_dog_listing(request, slug):
+    """Delete a dog listing"""
+    dog = get_object_or_404(Dog, slug=slug, lister=request.user)
+    
+    if request.method == 'POST':
+        dog_name = dog.name
+        dog.delete()
+        messages.success(request, f'Listing for {dog_name} has been deleted.')
+        return redirect('profile')
+    
+    return render(request, 'confirm_delete_dog.html', {'dog': dog})
+
+@login_required
+def mark_as_adopted(request, slug):
+    """Mark a dog as adopted"""
+    dog = get_object_or_404(Dog, slug=slug, lister=request.user)
+    
+    if request.method == 'POST':
+        dog.is_adopted = True
+        dog.save()
+        messages.success(request, f'{dog.name} has been marked as adopted!')
+        return redirect('profile')
+    
+    return redirect('profile')

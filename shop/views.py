@@ -5,20 +5,108 @@ from userauth.models import Address
 from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+from django.db import models
+from django.contrib import messages
 from .recommendations import (
     get_similar_products,
     get_frequently_bought_together,
     get_trending_products,
     get_personalized_recommendations
 )
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 import json
 import requests
+
+def send_order_confirmation_email(order):
+    """Send order confirmation email to customer"""
+    try:
+        subject = f'Order Confirmation - #{order.order_number}'
+        
+        # Prepare order items for email
+        items_list = []
+        for item in order.items.all():
+            items_list.append({
+                'product': item.product.name,
+                'quantity': item.quantity,
+                'size': item.size.name if item.size else 'N/A',
+                'price': item.price,
+                'total': item.quantity * item.price
+            })
+        
+        # Email message
+        message = f"""
+Dear {order.user.first_name},
+
+Thank you for your order!
+
+Order Details:
+Order Number: #{order.order_number}
+Order Date: {order.created_at.strftime('%B %d, %Y at %I:%M %p')}
+Total Amount: NPR {order.total_amount}
+
+Items Ordered:
+"""
+        for item in items_list:
+            message += f"\n- {item['product']} x {item['quantity']} (Size: {item['size']}) - NPR {item['total']}"
+        
+        message += f"""
+
+Shipping Address:
+{order.address}
+
+We'll send you another email when your order ships.
+
+Thank you for shopping with Pethood!
+
+Best regards,
+The Pethood Team
+"""
+        
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[order.user.email],
+            fail_silently=True,
+        )
+        return True
+    except Exception as e:
+        print(f"Failed to send order confirmation email: {e}")
+        return False
 
 # Create your views here.
 # def shop_home(request):
 #     products = Product.objects.all()
 #     return render(request, 'shop.html', {'products': products})
 
+def search(request):
+    """Search products by name, description, or category"""
+    query = request.GET.get('q', '').strip()
+    
+    if query:
+        # Split query into words for better matching
+        words = query.split()
+        
+        # Build query to search for each word
+        q_objects = models.Q()
+        for word in words:
+            q_objects |= (
+                models.Q(name__icontains=word) |
+                models.Q(description__icontains=word) |
+                models.Q(category__icontains=word)
+            )
+        
+        products = Product.objects.filter(q_objects).distinct()
+    else:
+        products = Product.objects.none()
+    
+    context = {
+        'products': products,
+        'query': query,
+        'categories': Product.CATEGORY_CHOICES,
+    }
+    return render(request, 'search_results.html', context)
 
 def shop_home(request):
     selected_categories = request.GET.getlist('category')
@@ -378,6 +466,9 @@ def checkout_view(request):
             # Clear the checked out items
             items.delete()
             
+            # Send order confirmation email
+            send_order_confirmation_email(order)
+            
             # Clear buy now session flag
             if 'buy_now_item_id' in request.session:
                 del request.session['buy_now_item_id']
@@ -553,6 +644,9 @@ def khalti_callback(request):
                 # Get billing info from session
                 billing = request.session.get('khalti_billing', {})
                 
+                # Send order confirmation email
+                send_order_confirmation_email(order)
+                
                 # Get cart items
                 cart = Cart.objects.get(user=request.user)
                 buy_now_item_id = request.session.get('buy_now_item_id')
@@ -642,6 +736,21 @@ def order_success(request):
     # Get the latest order for this user
     order = Order.objects.filter(user=request.user).first()
     return render(request, 'order_success.html', {'order': order})
+
+@login_required
+def cancel_order(request, order_id):
+    """Cancel an order if it's still pending"""
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    
+    # Only allow cancellation if order is pending (before packing)
+    if order.status == 'pending':
+        order.status = 'cancelled'
+        order.save()
+        messages.success(request, f'Order #{order.order_number} has been cancelled successfully.')
+    else:
+        messages.error(request, f'Order #{order.order_number} cannot be cancelled as it is already {order.get_status_display().lower()}.')
+    
+    return redirect('profile')
 
 
 

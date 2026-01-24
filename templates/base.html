@@ -27,10 +27,9 @@
     <nav class="nav-links" id="navLinks">
       <a href="{% url 'home' %}">HOME</a>
       <a href="{% url 'shop_home' %}">COLLECTION</a>
-      <a href="#">ABOUT US</a>
+      <a href="{% url 'about_us' %}">ABOUT US</a>
       <a href="{% url 'dog:dog_list' %}">OUR DOGS</a>
       <a href="{% url 'dog:add_dog_listing' %}">LIST A DOG</a>
-      <a href="#">SERVICES</a>
       
       <!-- Mobile-only user menu items -->
       <div class="mobile-user-menu">
@@ -64,10 +63,12 @@
 
     <div class="icons">
       <!-- Search Bar -->
-      <div class="search-container">
-        <input type="text" class="search-bar" placeholder="Search...">
-        <i class="fas fa-search search-icon"></i>
-      </div>
+      <form action="{% url 'search' %}" method="GET" class="search-container">
+        <input type="text" name="q" class="search-bar" placeholder="Search products..." value="{{ request.GET.q }}">
+        <button type="submit" class="search-icon" style="background: none; border: none; cursor: pointer;">
+          <i class="fas fa-search"></i>
+        </button>
+      </form>
 
       <!-- Cart Icon -->
       {% if user.is_authenticated %}

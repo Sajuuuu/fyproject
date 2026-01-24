@@ -7,3 +7,6 @@ def privacy_policy(request):
 
 def terms_of_use(request):
     return render(request, 'terms_of_use.html')
+
+def about_us(request):
+    return render(request, 'about_us.html')

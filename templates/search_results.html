@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  .search-results-container {
+    max-width: 1400px;
+    margin: 40px auto;
+    padding: 0 20px;
+    min-height: 60vh;
+  }
+  
+  .search-header {
+    margin-bottom: 30px;
+  }
+  
+  .search-header h1 {
+    color: #344055;
+    font-size: 32px;
+    margin-bottom: 10px;
+  }
+  
+  .search-header h1 span {
+    color: #ff6f91;
+  }
+  
+  .search-info {
+    color: #666;
+    font-size: 16px;
+  }
+  
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+  }
+  
+  .product-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: all 0.3s;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(255, 111, 145, 0.2);
+  }
+  
+  .product-image {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+  }
+  
+  .product-info {
+    padding: 20px;
+  }
+  
+  .product-category {
+    color: #ff6f91;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  
+  .product-name {
+    color: #344055;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  
+  .product-price {
+    color: #ff6f91;
+    font-size: 24px;
+    font-weight: 700;
+  }
+  
+  .no-results {
+    text-align: center;
+    padding: 80px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .no-results i {
+    font-size: 100px;
+    color: #e0e0e0;
+    margin-bottom: 20px;
+  }
+  
+  .no-results h3 {
+    color: #666;
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+  
+  .no-results p {
+    color: #999;
+    font-size: 16px;
+    margin-bottom: 30px;
+  }
+  
+  .back-btn {
+    background: #ff6f91;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: background 0.3s;
+    text-align: center;
+    margin: 0 auto;
+  }
+  
+  .back-btn i {
+    font-size: 14px;
+    margin-right: 6px;
+    color: white;
+  }
+  
+  .back-btn:hover {
+    background: #ff5681;
+  }
+  
+  @media (max-width: 768px) {
+    .products-grid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    
+    .product-image {
+      height: 200px;
+    }
+  }
+</style>
+
+<div class="search-results-container">
+  <div class="search-header">
+    <h1>Search <span>Results</span></h1>
+    {% if query %}
+      <p class="search-info">
+        Showing results for "<strong>{{ query }}</strong>"
+        {% if products %}
+          - {{ products.count }} product{{ products.count|pluralize }} found
+        {% endif %}
+      </p>
+    {% else %}
+      <p class="search-info">Enter a search term to find products</p>
+    {% endif %}
+  </div>
+  
+  {% if products %}
+    <div class="products-grid">
+      {% for product in products %}
+        <a href="{% url 'productdetails' product.slug %}" class="product-card">
+          <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+          <div class="product-info">
+            <div class="product-category">{{ product.get_category_display }}</div>
+            <h3 class="product-name">{{ product.name }}</h3>
+            <div class="product-price">रु{{ product.price }}</div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% elif query %}
+    <div class="no-results">
+      <i class="fas fa-search"></i>
+      <h3>No Products Found</h3>
+      <p>We couldn't find any products matching "{{ query }}"</p>
+      <p style="color: #999; font-size: 14px; margin-bottom: 20px;">Try different keywords or browse our collection</p>
+      <a href="{% url 'shop_home' %}" class="back-btn">
+        <i class="fas fa-shopping-bag"></i> Browse All Products
+      </a>
+    </div>
+  {% else %}
+    <div class="no-results">
+      <i class="fas fa-search"></i>
+      <h3>Start Your Search</h3>
+      <p>Enter keywords in the search bar above to find products</p>
+      <a href="{% url 'shop_home' %}" class="back-btn">
+        <i class="fas fa-shopping-bag"></i> Browse All Products
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -31,6 +31,7 @@ h2 span {
     width: 90%;
     max-width: 1200px;
     margin: 0 auto 30px auto;
+    min-height: 60vh;
 }
 
 /* Table styling */
@@ -398,11 +399,13 @@ h2 span {
     </tbody>
     </table>
 
+    {% if cart_items %}
     <div class="total-section">
         Total: रु{{ total }}
     </div>
 
     <a href="{% url 'checkout' %}" class="checkout-btn">Proceed to Checkout</a>
+    {% endif %}
 </div>
 
 <script>

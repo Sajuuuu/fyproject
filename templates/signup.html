@@ -68,6 +68,49 @@
       box-sizing: border-box;
     }
 
+    .name-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .name-row input {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
+    .terms-checkbox {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 18px;
+      gap: 10px;
+    }
+
+    .terms-checkbox input[type="checkbox"] {
+      margin-top: 3px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .terms-checkbox label {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.5;
+      cursor: pointer;
+    }
+
+    .terms-checkbox label a {
+      color: #e91e63;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .terms-checkbox label a:hover {
+      text-decoration: underline;
+    }
+
     button {
       width: 100%;
       background: #4da6ff;
@@ -141,6 +184,23 @@
         border-radius: 10px;
       }
 
+      .name-row {
+        gap: 8px;
+      }
+
+      .terms-checkbox {
+        margin-bottom: 20px;
+      }
+
+      .terms-checkbox input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+      }
+
+      .terms-checkbox label {
+        font-size: 14px;
+      }
+
       button {
         padding: 16px;
         font-size: 18px;
@@ -197,10 +257,21 @@
 
       <form method="POST">
         {% csrf_token %}
-        <input type="text" name="username" placeholder="Username" required>
+        <div class="name-row">
+          <input type="text" name="first_name" placeholder="First Name" required>
+          <input type="text" name="last_name" placeholder="Last Name" required>
+        </div>
         <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password1" placeholder="Password" required>
+        <input type="password" name="password1" placeholder="Password (min 8 characters)" required>
         <input type="password" name="password2" placeholder="Confirm Password" required>
+        
+        <div class="terms-checkbox">
+          <input type="checkbox" name="accept_terms" id="accept_terms" required>
+          <label for="accept_terms">
+            I agree to the <a href="{% url 'terms_of_use' %}" target="_blank">Terms of Use</a> and <a href="{% url 'privacy_policy' %}" target="_blank">Privacy Policy</a>
+          </label>
+        </div>
+        
         <button type="submit">Create Account</button>
       </form>
       <p class="login-link">Already have an account? <a href="{% url 'login' %}">Login</a></p>

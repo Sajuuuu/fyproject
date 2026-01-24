@@ -192,6 +192,15 @@
             {{ message }}
           </div>
         {% endfor %}
+        
+        <!-- Show resend verification link if user is unverified -->
+        {% if show_resend %}
+          <div style="text-align: center; margin-bottom: 15px;">
+            <a href="{% url 'resend_verification' %}" style="color: #4da6ff; text-decoration: none; font-size: 14px; font-weight: 600;">
+              Didn't receive the email? Resend verification
+            </a>
+          </div>
+        {% endif %}
       {% endif %}
 
       <form method="POST">

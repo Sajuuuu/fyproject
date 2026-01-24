@@ -1,0 +1,415 @@
+{% extends 'base.html' %}
+{% block title %}All Listings - Pethood{% endblock %}
+{% load static %}
+{% block content %}
+
+<style>
+/* All Listings page styles */
+body {
+    background-color: #fff9f0;
+    font-family: 'Arial', sans-serif;
+}
+
+.listings-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 30px auto 50px auto;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.page-header h2 {
+    font-size: 28px;
+    color: #344055;
+    font-weight: 700;
+    margin: 0;
+}
+
+.page-header h2 span {
+    color: #ff6f91;
+}
+
+.header-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-back {
+    background-color: #fff;
+    color: #ff6f91;
+    padding: 10px 20px;
+    border: 2px solid #ff6f91;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-back:hover {
+    background-color: #ff6f91;
+    color: white;
+}
+
+.btn-add {
+    background-color: #ff6f91;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-add:hover {
+    background-color: #ff3f6f;
+}
+
+.listings-grid {
+    display: grid;
+    gap: 20px;
+}
+
+.listing-card {
+    display: flex;
+    gap: 20px;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid #ffe6f0;
+    transition: all 0.3s;
+}
+
+.listing-card:hover {
+    border-color: #ff6f91;
+    box-shadow: 0 6px 16px rgba(255, 111, 145, 0.15);
+}
+
+.listing-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.listing-info {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.listing-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.listing-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: #344055;
+    margin: 0;
+}
+
+.dropdown-container {
+    position: relative;
+}
+
+.listing-menu-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #666;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: all 0.2s;
+}
+
+.listing-menu-btn:hover {
+    background: #fff5f8;
+    color: #ff6f91;
+}
+
+.dropdown-menu-actions {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: white;
+    border: 2px solid #ffe6f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 180px;
+    z-index: 1000;
+    display: none;
+}
+
+.dropdown-menu-actions.show {
+    display: block;
+}
+
+.dropdown-menu-actions a,
+.dropdown-menu-actions button {
+    display: block;
+    width: 100%;
+    padding: 12px 16px;
+    text-align: left;
+    background: none;
+    border: none;
+    color: #344055;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-bottom: 1px solid #ffe6f0;
+}
+
+.dropdown-menu-actions a:last-child,
+.dropdown-menu-actions button:last-child {
+    border-bottom: none;
+}
+
+.dropdown-menu-actions a:hover,
+.dropdown-menu-actions button:hover {
+    background: #fff5f8;
+    color: #ff6f91;
+}
+
+.dropdown-menu-actions a i,
+.dropdown-menu-actions button i {
+    margin-right: 8px;
+    width: 16px;
+}
+
+.listing-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.listing-detail-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #666;
+    font-size: 14px;
+}
+
+.detail-item i {
+    color: #ff6f91;
+}
+
+.detail-item strong {
+    color: #344055;
+}
+
+.listing-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.status-available {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-adopted {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.no-listings {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 12px;
+}
+
+.no-listings i {
+    font-size: 64px;
+    color: #ff6f91;
+    margin-bottom: 20px;
+}
+
+.no-listings p {
+    color: #666;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .listing-card {
+        flex-direction: column;
+    }
+    
+    .listing-image {
+        width: 100%;
+        height: 250px;
+    }
+    
+    .listing-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+</style>
+
+<div class="listings-container">
+    <div class="page-header">
+        <h2><span>All</span> Listings</h2>
+        <div class="header-actions">
+            <a href="{% url 'profile' %}" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Back to Profile
+            </a>
+            <a href="{% url 'dog:add_dog_listing' %}" class="btn-add">
+                <i class="fas fa-plus"></i> Add New
+            </a>
+        </div>
+    </div>
+
+    {% if my_dogs %}
+    <div class="listings-grid">
+        {% for dog in my_dogs %}
+        <div class="listing-card">
+            <img src="{{ dog.image.url }}" alt="{{ dog.name }}" class="listing-image">
+            
+            <div class="listing-info">
+                <div>
+                    <div class="listing-header">
+                        <h3 class="listing-name">{{ dog.name }}</h3>
+                        <div class="dropdown-container">
+                            <button class="listing-menu-btn" onclick="toggleDropdown(event, 'dogMenu{{ dog.id }}')">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div id="dogMenu{{ dog.id }}" class="dropdown-menu-actions">
+                                <a href="{% url 'dog:dog_detail' dog.id %}">
+                                    <i class="fas fa-eye"></i> View Details
+                                </a>
+                                <a href="{% url 'dog:edit_dog_listing' dog.id %}">
+                                    <i class="fas fa-edit"></i> Edit Listing
+                                </a>
+                                {% if not dog.is_adopted %}
+                                <form method="post" action="{% url 'dog:mark_as_adopted' dog.id %}" style="margin: 0;">
+                                    {% csrf_token %}
+                                    <button type="submit" onclick="return confirm('Mark {{ dog.name }} as adopted?')">
+                                        <i class="fas fa-heart"></i> Mark as Adopted
+                                    </button>
+                                </form>
+                                {% endif %}
+                                <form method="post" action="{% url 'dog:delete_dog_listing' dog.id %}" style="margin: 0;">
+                                    {% csrf_token %}
+                                    <button type="submit" onclick="return confirm('Are you sure you want to delete this listing?')" style="color: #dc3545;">
+                                        <i class="fas fa-trash"></i> Delete Listing
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="listing-details">
+                        <div class="listing-detail-row">
+                            <div class="detail-item">
+                                <i class="fas fa-paw"></i>
+                                <strong>Breed:</strong> {{ dog.breed }}
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-birthday-cake"></i>
+                                <strong>Age:</strong> {{ dog.age }} months
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-venus-mars"></i>
+                                <strong>Gender:</strong> {{ dog.get_gender_display }}
+                            </div>
+                        </div>
+                        <div class="listing-detail-row">
+                            <div class="detail-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <strong>Location:</strong> {{ dog.location }}
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-calendar"></i>
+                                <strong>Listed:</strong> {{ dog.created_at|date:"M d, Y" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <span class="listing-status status-{% if dog.is_adopted %}adopted{% else %}available{% endif %}">
+                        {% if dog.is_adopted %}
+                            <i class="fas fa-check-circle"></i> Adopted
+                        {% else %}
+                            <i class="fas fa-paw"></i> Available
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-listings">
+        <i class="fas fa-dog"></i>
+        <p>You haven't listed any dogs yet.</p>
+        <a href="{% url 'dog:add_dog_listing' %}" class="btn-add">
+            <i class="fas fa-plus"></i> Add Your First Listing
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function toggleDropdown(event, menuId) {
+    event.stopPropagation();
+    const menu = document.getElementById(menuId);
+    const allMenus = document.querySelectorAll('.dropdown-menu-actions');
+    
+    // Close all other menus
+    allMenus.forEach(m => {
+        if (m.id !== menuId) {
+            m.classList.remove('show');
+        }
+    });
+    
+    // Toggle current menu
+    menu.classList.toggle('show');
+}
+
+// Close dropdown when clicking outside
+window.onclick = function(event) {
+    if (!event.target.matches('.listing-menu-btn') && !event.target.matches('.listing-menu-btn i')) {
+        const dropdowns = document.querySelectorAll('.dropdown-menu-actions');
+        dropdowns.forEach(dropdown => {
+            dropdown.classList.remove('show');
+        });
+    }
+}
+</script>
+
+{% endblock %}
