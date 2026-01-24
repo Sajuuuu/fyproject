@@ -1,6 +1,7 @@
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.template.loader import render_to_string
 
 
 def send_new_listing_to_admin(dog):
@@ -33,25 +34,53 @@ def send_new_listing_to_admin(dog):
         print(f"Email error: {e}")
 
 
-def send_listing_approved(dog):
-    """Notify lister when their listing is approved"""
+def send_listing_approved(dog, admin_message=''):
+    """Notify lister when their listing is approved with HTML email"""
     if not dog.lister or not dog.lister.email:
         return
     
-    subject = f'Your listing for {dog.name} is approved!'
-    message = f"""
-    Hi {dog.lister.username},
+    subject = f'Your Dog Listing "{dog.name}" has been Approved!'
     
-    Good news! Your dog listing has been approved and is now live.
-    
-    - Dog: {dog.name}
-    - View at: http://localhost:8000/dogs/{dog.slug}/
-    
-    Best regards,
-    Pethood Team
+    # Plain text fallback
+    text_content = f"""
+Hi {dog.lister.first_name or dog.lister.username},
+
+Great news! Your dog listing has been reviewed and approved by our team. It is now live on Pethood and visible to potential adopters.
+
+Dog Details:
+- Name: {dog.name}
+- Breed: {dog.breed}
+- Age: {dog.age} months
+- Gender: {dog.get_gender_display()}
+- Location: {dog.location}
+
+{admin_message if admin_message else ''}
+
+View your listing: http://localhost:8000/dogs/{dog.slug}/
+
+Thank you for helping dogs find their forever homes!
+
+Best regards,
+The Pethood Team
     """
     
+    # HTML content
+    context = {
+        'dog': dog,
+        'admin_message': admin_message,
+        'site_url': 'http://localhost:8000',
+    }
+    html_content = render_to_string('emails/dog_approval.html', context)
+    
     try:
-        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [dog.lister.email], fail_silently=False)
+        # Create email with both plain text and HTML versions
+        email = EmailMultiAlternatives(
+            subject=subject,
+            body=text_content,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[dog.lister.email]
+        )
+        email.attach_alternative(html_content, "text/html")
+        email.send(fail_silently=False)
     except Exception as e:
         print(f"Email error: {e}")

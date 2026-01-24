@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Listing Approved</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f5f5f5;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f5f5f5; padding: 20px 0;">
+        <tr>
+            <td align="center">
+                <table cellpadding="0" cellspacing="0" border="0" width="600" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); padding: 50px 30px; text-align: center;">
+                            <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.25); border-radius: 50%; margin: 0 auto 20px; line-height: 80px; font-size: 48px; color: white;">✓</div>
+                            <h1 style="color: white; font-size: 28px; margin: 0 0 10px 0; font-weight: 700;">Listing Approved!</h1>
+                            <p style="color: white; font-size: 15px; margin: 0; opacity: 0.95;">Your dog listing is now live and visible to adopters</p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Content -->
+                    <tr>
+                        <td style="padding: 40px 30px; text-align: center;">
+                            
+                            <!-- Greeting -->
+                            <p style="font-size: 16px; color: #344055; margin: 0 0 30px 0; text-align: left; line-height: 1.6;">
+                                Hi <strong>{{ dog.lister.first_name|default:dog.lister.username }}</strong>,
+                            </p>
+                            
+                            <p style="font-size: 16px; color: #344055; margin: 0 0 30px 0; text-align: left; line-height: 1.6;">
+                                Great news! Your dog listing has been reviewed and <strong>approved</strong> by our team. It is now live on Pethood and visible to potential adopters.
+                            </p>
+                            
+                            <!-- Dog Info Box -->
+                            <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f0fff4; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
+                                <tr>
+                                    <td style="text-align: center;">
+                                        {% if dog.image %}
+                                        <img src="{{ site_url }}{{ dog.image.url }}" alt="{{ dog.name }}" style="width: 200px; height: 200px; object-fit: cover; border-radius: 12px; margin-bottom: 20px;">
+                                        {% endif %}
+                                        
+                                        <div style="font-size: 14px; color: #666; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Dog Name</div>
+                                        <div style="font-size: 28px; color: #28a745; font-weight: 800; margin-bottom: 20px;">{{ dog.name }}</div>
+                                        
+                                        <div style="border-top: 2px solid #d4edda; padding-top: 20px; margin-top: 20px; text-align: left;">
+                                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                                <tr>
+                                                    <td style="padding: 8px 0; color: #666; font-size: 14px;">
+                                                        <strong style="color: #344055;">Breed:</strong> {{ dog.breed }}
+                                                    </td>
+                                                    <td style="padding: 8px 0; color: #666; font-size: 14px; text-align: right;">
+                                                        <strong style="color: #344055;">Age:</strong> {{ dog.age }} months
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding: 8px 0; color: #666; font-size: 14px;">
+                                                        <strong style="color: #344055;">Gender:</strong> {{ dog.get_gender_display }}
+                                                    </td>
+                                                    <td style="padding: 8px 0; color: #666; font-size: 14px; text-align: right;">
+                                                        <strong style="color: #344055;">Location:</strong> {{ dog.location }}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            {% if admin_message %}
+                            <!-- Admin Message -->
+                            <div style="text-align: left; margin: 30px 0;">
+                                <h2 style="font-size: 18px; color: #344055; margin: 0 0 15px 0; font-weight: 700;">Message from Admin</h2>
+                                <div style="background-color: #fff5e6; border-left: 4px solid #ffc107; padding: 20px; border-radius: 8px; line-height: 1.6; color: #666;">
+                                    {{ admin_message }}
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- What's Next -->
+                            <div style="text-align: left; margin: 30px 0;">
+                                <h2 style="font-size: 18px; color: #344055; margin: 0 0 15px 0; font-weight: 700;">What's Next?</h2>
+                                <div style="background-color: #f8f9fa; border-radius: 8px; padding: 20px; line-height: 1.6; color: #666;">
+                                    <ul style="margin: 0; padding-left: 20px;">
+                                        <li style="margin-bottom: 10px;">Your listing is now visible to adopters on Pethood</li>
+                                        <li style="margin-bottom: 10px;">Interested adopters will contact you directly via the phone number you provided</li>
+                                        <li style="margin-bottom: 10px;">Once your dog finds a home, you can mark the listing as "Adopted" from your profile</li>
+                                        <li style="margin-bottom: 0;">You can edit or update your listing anytime from your profile</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- Call to Action -->
+                            <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top: 30px;">
+                                <tr>
+                                    <td align="center">
+                                        <a href="{{ site_url }}{% url 'dog:dog_detail' dog.slug %}" style="display: inline-block; background: #28a745; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);">View Your Listing</a>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <p style="text-align: center; color: #666; font-size: 15px; margin-top: 30px; line-height: 1.6;">
+                                Thank you for helping dogs find their forever homes!<br>
+                                Together we can make a difference.
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f8f9fa; padding: 20px 30px; text-align: center; border-top: 1px solid #d4edda;">
+                            <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">The Pethood Team</p>
+                            <p style="margin: 0; color: #999; font-size: 12px;">If you have any questions, contact us at support@pethood.com</p>
+                        </td>
+                    </tr>
+                    
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

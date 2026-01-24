@@ -8,6 +8,7 @@ from django.conf import settings
 from django.db.models import Count, Sum, Q
 from shop.models import Product, Order, OrderItem, Size
 from dog.models import Dog, DogImage
+from dog.emails import send_listing_approved
 from decimal import Decimal
 
 # Context processor for notification counts
@@ -209,28 +210,8 @@ def dog_approve(request, dog_id):
         
         # Send approval email if checkbox is checked
         if send_email:
-            subject = f'Your Dog Listing "{dog.name}" has been Approved!'
-            email_message = f"""
-Dear {dog.lister.first_name},
-
-Great news! Your dog listing for "{dog.name}" has been approved and is now live on Pethood.
-
-{message if message else 'Thank you for helping dogs find their forever homes!'}
-
-You can view your listing here: {request.build_absolute_uri(dog.get_absolute_url() if hasattr(dog, 'get_absolute_url') else '/')}
-
-Best regards,
-The Pethood Team
-            """
-            
             try:
-                send_mail(
-                    subject,
-                    email_message,
-                    settings.DEFAULT_FROM_EMAIL,
-                    [dog.lister.email],
-                    fail_silently=False,
-                )
+                send_listing_approved(dog, admin_message=message)
                 messages.success(request, f'Dog listing "{dog.name}" approved and email sent!')
             except Exception as e:
                 messages.warning(request, f'Dog approved but email failed: {str(e)}')
