@@ -26,9 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-l96!k3uxrd#b#qid%@3$zq-d5m^6qi*d!esq%&*fkb5f$pne7^')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Khalti Payment Gateway Settings
 KHALTI_PUBLIC_KEY = config('KHALTI_PUBLIC_KEY', default='')
