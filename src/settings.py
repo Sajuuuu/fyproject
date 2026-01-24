@@ -31,8 +31,8 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = []
 
 # Khalti Payment Gateway Settings
-KHALTI_PUBLIC_KEY = config('KHALTI_PUBLIC_KEY', default='test_public_key_dc74e0fd57cb46cd93832aee0a507256')
-KHALTI_SECRET_KEY = config('KHALTI_SECRET_KEY', default='test_secret_key_f59e8b7d18b4499ca40f68195a846e9b')
+KHALTI_PUBLIC_KEY = config('KHALTI_PUBLIC_KEY', default='')
+KHALTI_SECRET_KEY = config('KHALTI_SECRET_KEY', default='')
 KHALTI_INITIATE_URL = config('KHALTI_INITIATE_URL', default='https://khalti.com/api/v2/epayment/initiate/')
 KHALTI_VERIFY_URL = config('KHALTI_VERIFY_URL', default='https://khalti.com/api/v2/payment/verify/')
 
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'shop',
     'dog',
     'company',
+    'dashboard',
 ]
 
 MIDDLEWARE = [

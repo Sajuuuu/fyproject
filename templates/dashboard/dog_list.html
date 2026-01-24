@@ -1,0 +1,126 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Dog Listings - Pethood Admin{% endblock %}
+{% block page_title %}Dog Listings Management{% endblock %}
+
+{% block content %}
+<style>
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 12px 24px;
+    border: 2px solid #e0e0e0;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #344055;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.filter-btn.active {
+    background: #ff6f91;
+    color: white;
+    border-color: #ff6f91;
+}
+
+.dog-image-small {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+</style>
+
+<div class="filter-buttons">
+    <a href="{% url 'dashboard:dog_list' %}" class="filter-btn {% if not selected_status %}active{% endif %}">
+        All Listings
+    </a>
+    <a href="{% url 'dashboard:dog_list' %}?status=pending" class="filter-btn {% if selected_status == 'pending' %}active{% endif %}">
+        Pending Approval
+    </a>
+    <a href="{% url 'dashboard:dog_list' %}?status=approved" class="filter-btn {% if selected_status == 'approved' %}active{% endif %}">
+        Approved
+    </a>
+    <a href="{% url 'dashboard:dog_list' %}?status=adopted" class="filter-btn {% if selected_status == 'adopted' %}active{% endif %}">
+        Adopted
+    </a>
+</div>
+
+<div class="card">
+    {% if dogs %}
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Breed</th>
+                <th>Age</th>
+                <th>Location</th>
+                <th>Lister</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dog in dogs %}
+            <tr>
+                <td>
+                    {% if dog.image %}
+                    <img src="{{ dog.image.url }}" alt="{{ dog.name }}" class="dog-image-small">
+                    {% else %}
+                    <div class="dog-image-small" style="background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-dog" style="color: #ccc;"></i>
+                    </div>
+                    {% endif %}
+                </td>
+                <td><strong>{{ dog.name }}</strong></td>
+                <td>{{ dog.breed }}</td>
+                <td>{{ dog.age }} months</td>
+                <td>{{ dog.location }}</td>
+                <td>{{ dog.lister.username }}</td>
+                <td>
+                    {% if dog.is_adopted %}
+                        <span class="badge badge-cancelled">Adopted</span>
+                    {% elif dog.is_approved %}
+                        <span class="badge badge-approved">Approved</span>
+                    {% else %}
+                        <span class="badge badge-unapproved">Pending</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if not dog.is_approved %}
+                    <a href="{% url 'dashboard:dog_approve' dog.id %}" class="btn btn-success btn-sm">
+                        <i class="fas fa-check"></i> Approve
+                    </a>
+                    <a href="{% url 'dashboard:dog_reject' dog.id %}" class="btn btn-danger btn-sm">
+                        <i class="fas fa-times"></i> Reject
+                    </a>
+                    {% elif dog.is_approved and not dog.is_adopted %}
+                    <a href="{% url 'dashboard:dog_mark_adopted' dog.id %}" class="btn btn-success btn-sm">
+                        <i class="fas fa-heart"></i> Mark Adopted
+                    </a>
+                    <a href="{% url 'dog:dog_detail' dog.slug %}" class="btn btn-primary btn-sm" target="_blank">
+                        <i class="fas fa-eye"></i> View
+                    </a>
+                    {% else %}
+                    <a href="{% url 'dog:dog_detail' dog.slug %}" class="btn btn-primary btn-sm" target="_blank">
+                        <i class="fas fa-eye"></i> View
+                    </a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="text-align: center; padding: 40px; color: #999;">No dog listings found</p>
+    {% endif %}
+</div>
+{% endblock %}

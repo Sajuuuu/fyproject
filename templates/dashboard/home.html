@@ -1,0 +1,149 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Dashboard Home - Pethood Admin{% endblock %}
+{% block page_title %}Dashboard Overview{% endblock %}
+
+{% block content %}
+<style>
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+}
+
+.stat-icon.purple {
+    background: #ff6f91;
+}
+
+.stat-icon.blue {
+    background: #5a8dee;
+}
+
+.stat-icon.green {
+    background: #48bb78;
+}
+
+.stat-icon.orange {
+    background: #ff9f43;
+}
+
+.stat-info h3 {
+    font-size: 32px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.stat-info p {
+    color: #888;
+    font-size: 14px;
+}
+</style>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon purple">
+            <i class="fas fa-box"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ total_products }}</h3>
+            <p>Total Products</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon blue">
+            <i class="fas fa-shopping-cart"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ total_orders }}</h3>
+            <p>Total Orders ({{ pending_orders }} pending)</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon green">
+            <i class="fas fa-dog"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ total_dogs }}</h3>
+            <p>Dog Listings ({{ pending_dogs }} pending)</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon orange">
+            <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ total_users }}</h3>
+            <p>Registered Users</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3>Recent Orders</h3>
+    </div>
+    {% if recent_orders %}
+    <table>
+        <thead>
+            <tr>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in recent_orders %}
+            <tr>
+                <td><strong>#{{ order.order_number }}</strong></td>
+                <td>{{ order.first_name }} {{ order.last_name }}</td>
+                <td>{{ order.created_at|date:"M d, Y" }}</td>
+                <td><strong>NPR {{ order.total_amount }}</strong></td>
+                <td><span class="badge badge-{{ order.status }}">{{ order.get_status_display }}</span></td>
+                <td>
+                    <a href="{% url 'dashboard:order_detail' order.id %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-eye"></i> View
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="text-align: center; padding: 40px; color: #999;">No orders yet</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3>Total Revenue: <span style="color: #667eea;">NPR {{ total_revenue }}</span></h3>
+    </div>
+</div>
+{% endblock %}

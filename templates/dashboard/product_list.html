@@ -1,0 +1,106 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Products - Pethood Admin{% endblock %}
+{% block page_title %}Product Management{% endblock %}
+
+{% block content %}
+<style>
+.top-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.search-form {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+    max-width: 500px;
+}
+
+.search-form input,
+.search-form select {
+    padding: 10px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+}
+
+.search-form input {
+    flex: 1;
+}
+
+.product-image-small {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+</style>
+
+<div class="top-actions">
+    <form method="get" class="search-form">
+        <input type="text" name="q" placeholder="Search products..." value="{{ query }}">
+        <select name="category">
+            <option value="">All Categories</option>
+            {% for value, label in categories %}
+            <option value="{{ value }}" {% if selected_category == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-secondary">Search</button>
+    </form>
+    <a href="{% url 'dashboard:product_add' %}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Add Product
+    </a>
+</div>
+
+<div class="card">
+    {% if products %}
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Sizes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image-small">
+                </td>
+                <td><strong>{{ product.name }}</strong></td>
+                <td><span class="badge badge-processing">{{ product.get_category_display }}</span></td>
+                <td><strong>NPR {{ product.price }}</strong></td>
+                <td>
+                    {% if product.sizes.all %}
+                        {% for size in product.sizes.all %}
+                            <span class="badge badge-pending">{{ size.name }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <span style="color: #999;">N/A</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'dashboard:product_edit' product.id %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a href="{% url 'dashboard:product_delete' product.id %}" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash"></i> Delete
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="text-align: center; padding: 40px; color: #999;">No products found</p>
+    {% endif %}
+</div>
+{% endblock %}
