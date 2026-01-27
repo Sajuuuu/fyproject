@@ -63,8 +63,10 @@ SECRET_KEY=your-secret-key-here
 
 # Khalti Payment Gateway (Test/Sandbox Keys)
 # Get from: https://test-admin.khalti.com/#/settings/keys
-KHALTI_PUBLIC_KEY=20346eb9ec9d4c0bb87cbf7ef0059882
-KHALTI_SECRET_KEY=687b9d59675d44d7a45573bac4c54d92
+KHALTI_PUBLIC_KEY=your-khalti-public-key
+KHALTI_SECRET_KEY=your-khalti-secret-key
+
+# Khalti URLs
 KHALTI_INITIATE_URL=https://dev.khalti.com/api/v2/epayment/initiate/
 KHALTI_VERIFY_URL=https://dev.khalti.com/api/v2/epayment/lookup/
 ```
@@ -209,10 +211,8 @@ git add .
 git commit -m "Your commit message"
 ```
 
-### Push to GitHub (using SSH)
+### Push to GitHub
 ```bash
-eval "$(ssh-agent -s)"
-ssh-add sajuGithub
 git push origin main
 ```
 
@@ -226,8 +226,4 @@ git push origin main
 
 ## License
 
-This project is for educational purposes.
-
-## Support
-
-For issues or questions, contact: Sajupoudel50@gmail.com
+This project is provided as it is.
